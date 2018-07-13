@@ -1,0 +1,38 @@
+<!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
+<configuration scan="true" scanPeriod="10 seconds">
+  <include resource="org/springframework/boot/logging/logback/base.xml"/>
+  <Properties>
+    <Property name="QZD_LOG_PATH">logs</Property>
+    <Property name="QZD_SYS_LOG_LEVEL">info</Property>
+    <Property name="QZD_BIZ_LOG_LEVEL">debug</Property>
+  </Properties>
+
+  <Console name="CONSOLE" target="SYSTEM_OUT">
+    <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+  </Console>
+  <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>${env:QZD_LOG_PATH}/spring-mvc.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${env:QZD_LOG_PATH}/spring-mvc-%d{yyyyMMdd}.log.%i</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>1MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <maxHistory>2</maxHistory>
+    </rollingPolicy>
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%msg%n
+      </Pattern>
+    </layout>
+  </appender>
+
+
+  <logger name="com.xie"  level="debug" additivity="false" >
+    <appender-ref ref="INFO_FILE"/>
+    <appender-ref ref="CONSOLE"/>
+  </logger>
+  <root level="error">
+    <appender-ref ref="INFO_FILE"/>
+  </root>
+
+</configuration>
