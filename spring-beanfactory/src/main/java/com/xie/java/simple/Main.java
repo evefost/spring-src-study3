@@ -29,7 +29,7 @@ public class Main {
         BeanRegistrar bean = context.getBean(BeanRegistrar.class);
         Set<String> packages = new HashSet<String>();
         packages.add("com.xie.java");
-        bean.registerFeignClients(packages,registry);
+        bean.registerVirtualApis(packages,registry);
 
         InterFaceA faceA = (InterFaceA) context.getBean(InterFaceA.class);
 //        Field[] declaredFields = faceA.getClass().getDeclaredFields();

@@ -1,6 +1,8 @@
 package com.xie.java.simple;
 
-import com.xie.java.annotation.ProxyInterface;
+import com.xie.java.annotation.VirtualApi;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -16,7 +18,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
@@ -25,11 +26,13 @@ import java.util.Set;
 
 public class BeanRegistrar implements
         ResourceLoaderAware, BeanClassLoaderAware, EnvironmentAware {
-    private ResourceLoader resourceLoader;
+    protected final Log logger = LogFactory.getLog(getClass());
 
-    private ClassLoader classLoader;
+    protected ResourceLoader resourceLoader;
 
-    private Environment environment;
+    protected ClassLoader classLoader;
+
+    protected Environment environment;
 
     public void setBeanClassLoader(ClassLoader classLoader) {
         this.classLoader = classLoader;
@@ -43,12 +46,17 @@ public class BeanRegistrar implements
         this.resourceLoader = resourceLoader;
     }
 
-    public void registerFeignClients(Set<String> basePackages,
+    /**
+     * 注册虚拟接口
+     * @param basePackages
+     * @param registry
+     */
+    public void registerVirtualApis(Set<String> basePackages,
                                      BeanDefinitionRegistry registry) {
         ClassPathScanningCandidateComponentProvider scanner = getScanner();
         scanner.setResourceLoader(this.resourceLoader);
         AnnotationTypeFilter annotationTypeFilter = new AnnotationTypeFilter(
-                ProxyInterface.class);
+                VirtualApi.class);
         scanner.addIncludeFilter(annotationTypeFilter);
 
         for (String basePackage : basePackages) {
@@ -59,18 +67,15 @@ public class BeanRegistrar implements
                     // verify annotated class is an interface
                     AnnotatedBeanDefinition beanDefinition = (AnnotatedBeanDefinition) candidateComponent;
                     AnnotationMetadata annotationMetadata = beanDefinition.getMetadata();
-                    Assert.isTrue(annotationMetadata.isInterface(),
-                            "@FeignClient can only be specified on an interface");
                     String name =  "Proxy$"+candidateComponent.getBeanClassName();
-
-                    registerFeignClient(registry,name, annotationMetadata);
+                    registerVirtualApi(registry,name, annotationMetadata);
                 }
             }
         }
     }
 
 
-    private void registerFeignClient(BeanDefinitionRegistry registry,String name,
+    protected void registerVirtualApi(BeanDefinitionRegistry registry,String name,
                                      AnnotationMetadata annotationMetadata) {
         String className = annotationMetadata.getClassName();
         BeanDefinitionBuilder definition = BeanDefinitionBuilder

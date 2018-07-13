@@ -9,5 +9,6 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Documented
 @Import(BeanRegistrar.class)
-public @interface ProxyInterface {
+public @interface Topic {
+    String value();
 }
