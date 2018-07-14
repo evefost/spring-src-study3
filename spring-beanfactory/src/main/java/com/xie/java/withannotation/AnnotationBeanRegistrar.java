@@ -1,28 +1,28 @@
 package com.xie.java.withannotation;
 
+import com.xie.java.annotation.Tag;
 import com.xie.java.annotation.Topic;
+import com.xie.java.annotation.VirtualApi;
 import com.xie.java.simple.BeanRegistrar;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.context.EnvironmentAware;
-import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.util.ClassUtils;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.stereotype.Component;
 
-import java.lang.annotation.Annotation;
-import java.util.Map;
+import java.lang.reflect.Method;
+import java.util.*;
 
-
+//@Component
 public class AnnotationBeanRegistrar extends BeanRegistrar {
 
+    private Map<String,List<MethodInfo>> allTopicMethods = new HashMap<String, List<MethodInfo>>();
 
     @Override
     protected void registerVirtualApi(BeanDefinitionRegistry registry,String name,
@@ -37,6 +37,7 @@ public class AnnotationBeanRegistrar extends BeanRegistrar {
         definition.addPropertyValue("name", name);
         definition.addPropertyValue("type", className);
         definition.addPropertyValue("topic", attritutes.get("value"));
+        definition.addPropertyValue("allTopicMethods", allTopicMethods);
         definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
         AbstractBeanDefinition beanDefinition = definition.getBeanDefinition();
         beanDefinition.setPrimary(false);
@@ -47,4 +48,56 @@ public class AnnotationBeanRegistrar extends BeanRegistrar {
 
 
 
+    public void scanImplTopicTags(Set<String> basePackages) throws ClassNotFoundException {
+        //扫描指定的包，过滤出只打topic 及 tag标签的接口或类
+        ClassPathScanningCandidateComponentProvider scanner = getScanner();
+        scanner.setResourceLoader(this.resourceLoader);
+        AnnotationTypeFilter inFilter = new AnnotationTypeFilter(
+                Topic.class);
+        AnnotationTypeFilter exFilter = new AnnotationTypeFilter(
+                VirtualApi.class);
+        scanner.addIncludeFilter(inFilter);
+        scanner.addExcludeFilter(exFilter);
+
+
+        for (String basePackage : basePackages) {
+            Set<BeanDefinition> candidateComponents = scanner
+                    .findCandidateComponents(basePackage);
+            for (BeanDefinition candidateComponent : candidateComponents) {
+                if (candidateComponent instanceof AnnotatedBeanDefinition) {
+                    String beanClassName = candidateComponent.getBeanClassName();
+                    Class<?> targetClass = classLoader.loadClass(beanClassName);
+                    Topic topicAnnotation = targetClass.getAnnotation(Topic.class);
+                    String topic = topicAnnotation.value();
+                    Method[] methods = null;
+                    if(targetClass.isInterface()){
+                        methods = targetClass.getMethods();
+                    }else {
+                        methods = targetClass.getDeclaredMethods();
+                    }
+
+                    for(Method method:methods){
+                        Tag annotation = method.getAnnotation(Tag.class);
+                        if(annotation != null){
+                            method.setAccessible(true);
+                            String tag = annotation.value();
+                            String key = topic+":"+tag;
+                            MethodInfo methodInfo = new MethodInfo();
+                            methodInfo.setTargetClass(targetClass);
+                            methodInfo.setMethod(method);
+                            List<MethodInfo> methodList = allTopicMethods.get(key);
+                            if(methodList == null){
+                                methodList = new ArrayList<MethodInfo>();
+                                allTopicMethods.put(key,methodList);
+                            }
+                            methodList.add(methodInfo);
+                        }
+                    }
+
+                }
+            }
+        }
+
+
+    }
 }

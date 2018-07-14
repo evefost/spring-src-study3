@@ -10,15 +10,20 @@ import org.springframework.context.ApplicationContextAware;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 class AnnotationFactoryBean implements FactoryBean<Object>, InitializingBean, ApplicationContextAware {
+
+    private ApplicationContext applicationContext;
 
     private Class<?> type;
 
     private String name;
 
     private String topic;
+
+    private Map<String,List<MethodInfo>> allTopicMethods;
 
 
     public Object getObject() throws Exception {
@@ -36,8 +41,16 @@ class AnnotationFactoryBean implements FactoryBean<Object>, InitializingBean, Ap
         }
 
         //2.调用代理接口时，通过方法签名去匹配上面的信息
-        Object proxy = Proxy.newProxyInstance(AnnotationFactoryBean.class.getClassLoader(), new Class[]{type}, new VirtualInvocationHandler(this,topicTagMap));
+        Object proxy = Proxy.newProxyInstance(AnnotationFactoryBean.class.getClassLoader(), new Class[]{type}, new VirtualInvocationHandler(applicationContext,allTopicMethods,topicTagMap));
         return proxy;
+    }
+
+    public Map<String, List<MethodInfo>> getAllTopicMethods() {
+        return allTopicMethods;
+    }
+
+    public void setAllTopicMethods(Map<String, List<MethodInfo>> allTopicMethods) {
+        this.allTopicMethods = allTopicMethods;
     }
 
     public Class<?> getType() {
@@ -77,7 +90,7 @@ class AnnotationFactoryBean implements FactoryBean<Object>, InitializingBean, Ap
     }
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-
+        this.applicationContext = applicationContext;
     }
 
     @Override

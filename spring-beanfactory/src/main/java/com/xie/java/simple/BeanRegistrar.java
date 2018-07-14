@@ -34,6 +34,8 @@ public class BeanRegistrar implements
 
     protected Environment environment;
 
+
+
     public void setBeanClassLoader(ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
@@ -58,6 +60,7 @@ public class BeanRegistrar implements
         AnnotationTypeFilter annotationTypeFilter = new AnnotationTypeFilter(
                 VirtualApi.class);
         scanner.addIncludeFilter(annotationTypeFilter);
+
 
         for (String basePackage : basePackages) {
             Set<BeanDefinition> candidateComponents = scanner
