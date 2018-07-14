@@ -15,6 +15,12 @@ public interface InterFaceA {
     @Tag(value = "testB")
     String testB(String a);
 
+    @Tag(value = "baseParams")
+    String baseParams(String description,int age);
+
+    @Tag(value = "baseParams2")
+    String baseParams2(String description,int age,User user);
+
     @Tag(value = "addUser")
     String addUser(User user);
 

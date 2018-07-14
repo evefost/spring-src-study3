@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.DefaultParameterNameDiscoverer;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -53,6 +54,7 @@ public class VirtualInvocationHandler implements InvocationHandler {
             return method.toString();
         }
         try {
+            DefaultParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
             logger.info("调用前....");
             logger.info("搞点事情再返回");
             TopicTag topicTag = topicTags.get(method);
@@ -64,7 +66,21 @@ public class VirtualInvocationHandler implements InvocationHandler {
                 for (MethodInfo methodInfo : localMethods) {
                     Object targetBean = applicationContext.getBean(methodInfo.getTargetClass());
                     Method targetMethod = methodInfo.getMethod();
-                    targetMethod.invoke(targetBean, "ffffffff");
+                    Class<?>[] parameterTypes = targetMethod.getParameterTypes();
+                    System.out.println("参数类型==========");
+                    for(Class pT:parameterTypes){
+                        System.out.println(pT.getName());
+                    }
+
+                    //接口的方法参数名无法得到
+                    String[] parameterNames = nameDiscoverer.getParameterNames(targetMethod);
+                    if(parameterNames != null){
+                        for(String paramName:parameterNames){
+                            System.out.println("参数名:"+paramName);
+                        }
+                    }
+                    System.out.println("参数类型==========end");
+                    targetMethod.invoke(targetBean, args);
                 }
             }
 

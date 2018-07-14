@@ -1,18 +1,21 @@
 package com.xie.java.withannotation;
 
-import com.test.xie.JarClass;
 import com.xie.java.InterFaceA;
+import com.xie.java.InterfaceB;
 import com.xie.java.beans.User;
-import com.xie.java.simple.BeanRegistrar;
+import com.xie.java.service.ServiceAImpl;
+import com.xie.java.service.ServiceB;
+import com.xie.java.service.ServiceC;
+import org.springframework.aop.aspectj.AspectJAdviceParameterNameDiscoverer;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.DefaultParameterNameDiscoverer;
+import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.core.StandardReflectionParameterNameDiscoverer;
 
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,13 +46,31 @@ public class Main {
         beanRegistrar.scanImplTopicTags(packages);
 
         InterFaceA faceA = context.getBean(InterFaceA.class);
-        faceA.testA("这是调用a 方法的参数");
+        //faceA.testA("这是调用a 方法的参数");
         User user = new User();
         user.setName("xieyang");
         user.setAge(28);
+        faceA.baseParams2("谢谢这是描述",99,user);
+
+
         //faceA.addUser(user);
-        AnnotationFactoryBean factoryBeana = (AnnotationFactoryBean) context.getBean("&Proxy$com.xie.java.InterFaceA");
-        AnnotationFactoryBean factoryBeanb = (AnnotationFactoryBean) context.getBean("&Proxy$com.xie.java.InterfaceB");
+//        InterfaceB cse = context.getBean(InterfaceB.class);
+//        cse.testA("99999");
+
+
+//        ParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
+//        Method[] methods = InterFaceA.class.getDeclaredMethods();
+//        for(Method method:methods){
+//            System.out.println("方法:"+method.getName());
+//            String[] parameterNames = nameDiscoverer.getParameterNames(method);
+//            if(parameterNames != null){
+//                for(String name:parameterNames){
+//                    System.out.println("name:"+name);
+//                }
+//            }
+//
+//        }
+
         System.out.println(context);
     }
 

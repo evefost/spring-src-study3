@@ -5,7 +5,7 @@ import com.xie.java.annotation.Tag;
 import com.xie.java.annotation.Topic;
 
 @VirtualApi
-@Topic(value = "TopicA")
+@Topic(value = "TopicB")
 public interface InterfaceB {
 
     @Tag(value = "testA")
