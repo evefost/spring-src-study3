@@ -34,7 +34,7 @@ public class Main {
         packages.add("com.xie.java");
         packages.add("com.test.xie");
         beanRegistrar.registerVirtualApis(packages, registry);
-        beanRegistrar.scanImplTopicTags(packages);
+        beanRegistrar.scanConsumers(packages);
 
         InterFaceA faceA = context.getBean(InterFaceA.class);
         //faceA.testA("这是调用a 方法的参数");

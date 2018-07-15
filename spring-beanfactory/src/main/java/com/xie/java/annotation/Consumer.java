@@ -2,14 +2,15 @@ package com.xie.java.annotation;
 
 import com.xie.java.simple.BeanRegistrar;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 @Documented
-@Import(BeanRegistrar.class)
-public @interface Tag {
+public @interface Consumer {
 
-    String value();
+
+
 }

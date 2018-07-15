@@ -1,6 +1,7 @@
 package com.xie.java.service;
 
 import com.alibaba.fastjson.JSON;
+import com.xie.java.annotation.Consumer;
 import com.xie.java.annotation.Tag;
 import com.xie.java.annotation.Topic;
 import com.xie.java.beans.User;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
  * Created by xieyang on 18/7/14.
  */
 @Service
+@Consumer
 @Topic(value = "TopicA")
 public class ServiceAImpl {
 

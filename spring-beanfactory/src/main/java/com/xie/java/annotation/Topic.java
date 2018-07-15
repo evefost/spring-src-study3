@@ -1,14 +1,22 @@
 package com.xie.java.annotation;
 
-import com.xie.java.simple.BeanRegistrar;
-import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-@Import(BeanRegistrar.class)
 public @interface Topic {
-    String value();
+
+    @AliasFor("value")
+    public String topic() default "";
+
+    @AliasFor("topic")
+    public String value() default "";
+
+
+
+
+
 }

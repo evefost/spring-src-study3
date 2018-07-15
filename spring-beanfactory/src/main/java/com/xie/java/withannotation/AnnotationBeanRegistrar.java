@@ -1,11 +1,10 @@
 package com.xie.java.withannotation;
 
 import com.alibaba.fastjson.JSON;
+import com.xie.java.annotation.Consumer;
 import com.xie.java.annotation.Tag;
 import com.xie.java.annotation.Topic;
-import com.xie.java.annotation.VirtualApi;
 import com.xie.java.simple.BeanRegistrar;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -68,17 +67,13 @@ public class AnnotationBeanRegistrar extends BeanRegistrar  {
     }
 
 
-    public void scanImplTopicTags(Set<String> basePackages) throws ClassNotFoundException {
+    public void scanConsumers(Set<String> basePackages) throws ClassNotFoundException {
         //扫描指定的包，过滤出只打topic 及 tag标签的接口或类
         ClassPathScanningCandidateComponentProvider scanner = getScanner();
         scanner.setResourceLoader(this.resourceLoader);
         AnnotationTypeFilter inFilter = new AnnotationTypeFilter(
-                Topic.class);
-        AnnotationTypeFilter exFilter = new AnnotationTypeFilter(
-                VirtualApi.class);
+                Consumer.class);
         scanner.addIncludeFilter(inFilter);
-        scanner.addExcludeFilter(exFilter);
-
 
         for (String basePackage : basePackages) {
             Set<BeanDefinition> candidateComponents = scanner

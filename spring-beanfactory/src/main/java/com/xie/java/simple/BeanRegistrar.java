@@ -1,6 +1,6 @@
 package com.xie.java.simple;
 
-import com.xie.java.annotation.VirtualApi;
+import com.xie.java.annotation.Producer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanClassLoaderAware;
@@ -58,7 +58,7 @@ public class BeanRegistrar implements
         ClassPathScanningCandidateComponentProvider scanner = getScanner();
         scanner.setResourceLoader(this.resourceLoader);
         AnnotationTypeFilter annotationTypeFilter = new AnnotationTypeFilter(
-                VirtualApi.class);
+                Producer.class);
         scanner.addIncludeFilter(annotationTypeFilter);
 
 

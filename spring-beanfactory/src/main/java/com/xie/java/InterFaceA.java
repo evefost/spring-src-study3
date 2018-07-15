@@ -1,12 +1,12 @@
 package com.xie.java;
 
-import com.xie.java.annotation.VirtualApi;
+import com.xie.java.annotation.Producer;
 import com.xie.java.annotation.Tag;
 import com.xie.java.annotation.Topic;
 import com.xie.java.beans.User;
 
-@VirtualApi
-@Topic(value = "TopicA")
+@Producer
+@Topic("TopicA")
 public interface InterFaceA {
 
     @Tag(value = "testA")
