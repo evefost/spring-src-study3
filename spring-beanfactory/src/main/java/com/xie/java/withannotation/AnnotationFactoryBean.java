@@ -10,7 +10,6 @@ import org.springframework.context.ApplicationContextAware;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 class AnnotationFactoryBean implements FactoryBean<Object>, InitializingBean, ApplicationContextAware {
@@ -23,9 +22,11 @@ class AnnotationFactoryBean implements FactoryBean<Object>, InitializingBean, Ap
 
     private String topic;
 
-    private Map<String,List<MethodInfo>> producerMethods;
 
-    private Map<String,List<MethodInfo>> consumerMetods;
+    private  VirtualPointInfo producerInfo;
+
+    private  VirtualPointInfo consumerInfo;
+
 
     public Object getObject() throws Exception {
         //创建代理
@@ -42,25 +43,11 @@ class AnnotationFactoryBean implements FactoryBean<Object>, InitializingBean, Ap
         }
 
         //2.调用代理接口时，通过方法签名去匹配上面的信息
-        Object proxy = Proxy.newProxyInstance(AnnotationFactoryBean.class.getClassLoader(), new Class[]{type}, new VirtualInvocationHandler(applicationContext,consumerMetods,topicTagMap));
+        Object proxy = Proxy.newProxyInstance(AnnotationFactoryBean.class.getClassLoader(), new Class[]{type}, new VirtualInvocationHandler(applicationContext,consumerInfo,topicTagMap));
         return proxy;
     }
 
-    public Map<String, List<MethodInfo>> getProducerMethods() {
-        return producerMethods;
-    }
 
-    public void setProducerMethods(Map<String, List<MethodInfo>> producerMethods) {
-        this.producerMethods = producerMethods;
-    }
-
-    public Map<String, List<MethodInfo>> getConsumerMetods() {
-        return consumerMetods;
-    }
-
-    public void setConsumerMetods(Map<String, List<MethodInfo>> consumerMetods) {
-        this.consumerMetods = consumerMetods;
-    }
 
     public Class<?> getType() {
         return type;
@@ -84,6 +71,22 @@ class AnnotationFactoryBean implements FactoryBean<Object>, InitializingBean, Ap
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public VirtualPointInfo getProducerInfo() {
+        return producerInfo;
+    }
+
+    public void setProducerInfo(VirtualPointInfo producerInfo) {
+        this.producerInfo = producerInfo;
+    }
+
+    public VirtualPointInfo getConsumerInfo() {
+        return consumerInfo;
+    }
+
+    public void setConsumerInfo(VirtualPointInfo consumerInfo) {
+        this.consumerInfo = consumerInfo;
     }
 
     public Class<?> getObjectType() {

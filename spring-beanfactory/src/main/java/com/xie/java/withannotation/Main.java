@@ -41,7 +41,7 @@ public class Main {
         User user = new User();
         user.setName("xieyang");
         user.setAge(28);
-        faceA.addUser(user);
+        faceA.baseParams2("这是描述",19,user);
 
 
         //faceA.addUser(user);

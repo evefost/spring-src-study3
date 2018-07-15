@@ -15,7 +15,7 @@ import java.util.Set;
 @EnableFeignClients
 public class Main {
 
-    public static void main(String[] args) throws IllegalAccessException {
+    public static void main(String[] args) throws IllegalAccessException, ClassNotFoundException {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
         BeanDefinitionRegistry  registry = context;
         //BeanRegistrar 先注册到容器内

@@ -9,6 +9,6 @@ import com.xie.java.annotation.Topic;
 @Topic(value = "TopicB")
 public interface ServiceC {
 
-    @Tag(value = "testA")
+    @Tag(value = "testB")
     void testA(String a);
 }

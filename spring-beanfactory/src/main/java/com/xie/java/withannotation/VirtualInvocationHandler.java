@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,12 +26,12 @@ public class VirtualInvocationHandler implements InvocationHandler {
 
     private Map<Method, TopicTag> topicTags = new HashMap<Method, TopicTag>();
 
-    private Map<String, List<MethodInfo>> allTopicMethods;
+    private VirtualPointInfo consumerInfo;
 
 
-    public VirtualInvocationHandler(ApplicationContext applicationContext, Map<String, List<MethodInfo>> allTopicMethods, Map<Method, TopicTag> topicTagMap) {
+    public VirtualInvocationHandler(ApplicationContext applicationContext, VirtualPointInfo consumerInfo, Map<Method, TopicTag> topicTagMap) {
         this.applicationContext = applicationContext;
-        this.allTopicMethods = allTopicMethods;
+        this.consumerInfo = consumerInfo;
         topicTags = topicTagMap;
 
     }
@@ -59,29 +58,29 @@ public class VirtualInvocationHandler implements InvocationHandler {
             logger.info("搞点事情再返回");
             TopicTag topicTag = topicTags.get(method);
             logger.info("输出 topic and tag: " + topicTag.toString());
-            logger.info("参数:" + JSON.toJSONString(args));
-            String key = topicTag.toString();
-            List<MethodInfo> localMethods = allTopicMethods.get(key);
-            if (localMethods != null) {
-                for (MethodInfo methodInfo : localMethods) {
-                    Object targetBean = applicationContext.getBean(methodInfo.getTargetClass());
-                    Method targetMethod = methodInfo.getMethod();
-                    Class<?>[] parameterTypes = targetMethod.getParameterTypes();
-                    System.out.println("参数类型==========");
-                    for(Class pT:parameterTypes){
-                        System.out.println(pT.getName());
-                    }
 
-                    //接口的方法参数名无法得到
-                    String[] parameterNames = nameDiscoverer.getParameterNames(targetMethod);
-                    if(parameterNames != null){
-                        for(String paramName:parameterNames){
-                            System.out.println("参数名:"+paramName);
-                        }
-                    }
-                    System.out.println("参数类型==========end");
-                    targetMethod.invoke(targetBean, args);
+            String key = topicTag.toString();
+            //todo 发布消 。。。
+            logger.info("发布消 topic&&tag:" + key +" "+JSON.toJSONString(args));
+            MethodInfo methodInfo = consumerInfo.getMethodInfo(key);
+            if (methodInfo != null) {
+                Object targetBean = applicationContext.getBean(methodInfo.getTargetClass());
+                Method targetMethod = methodInfo.getMethod();
+                Class<?>[] parameterTypes = targetMethod.getParameterTypes();
+                System.out.println("参数类型==========");
+                for (Class pT : parameterTypes) {
+                    System.out.println(pT.getName());
                 }
+
+                //接口的方法参数名无法得到
+                String[] parameterNames = nameDiscoverer.getParameterNames(targetMethod);
+                if (parameterNames != null) {
+                    for (String paramName : parameterNames) {
+                        System.out.println("参数名:" + paramName);
+                    }
+                }
+                System.out.println("参数类型==========end");
+                targetMethod.invoke(targetBean, args);
             }
 
             Class<?> returnType = method.getReturnType();

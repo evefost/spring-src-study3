@@ -7,9 +7,30 @@ import java.lang.reflect.Method;
  */
 public class MethodInfo {
 
+
     private Class targetClass;
 
     private Method method;
+
+    private String topic;
+
+    private String tag;
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
     public Method getMethod() {
         return method;

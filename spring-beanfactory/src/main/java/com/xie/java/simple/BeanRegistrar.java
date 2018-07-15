@@ -54,7 +54,7 @@ public class BeanRegistrar implements
      * @param registry
      */
     public void registerVirtualApis(Set<String> basePackages,
-                                     BeanDefinitionRegistry registry) {
+                                     BeanDefinitionRegistry registry) throws ClassNotFoundException {
         ClassPathScanningCandidateComponentProvider scanner = getScanner();
         scanner.setResourceLoader(this.resourceLoader);
         AnnotationTypeFilter annotationTypeFilter = new AnnotationTypeFilter(
@@ -79,7 +79,7 @@ public class BeanRegistrar implements
 
 
     protected void registerVirtualApi(BeanDefinitionRegistry registry,String name,
-                                     AnnotationMetadata annotationMetadata) {
+                                     AnnotationMetadata annotationMetadata) throws ClassNotFoundException {
         String className = annotationMetadata.getClassName();
         BeanDefinitionBuilder definition = BeanDefinitionBuilder
                 .genericBeanDefinition(MyTestFactoryBean.class);
