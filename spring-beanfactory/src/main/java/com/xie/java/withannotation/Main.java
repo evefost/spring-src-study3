@@ -1,21 +1,12 @@
 package com.xie.java.withannotation;
 
 import com.xie.java.InterFaceA;
-import com.xie.java.InterfaceB;
 import com.xie.java.beans.User;
-import com.xie.java.service.ServiceAImpl;
-import com.xie.java.service.ServiceB;
-import com.xie.java.service.ServiceC;
-import org.springframework.aop.aspectj.AspectJAdviceParameterNameDiscoverer;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.core.DefaultParameterNameDiscoverer;
-import org.springframework.core.ParameterNameDiscoverer;
-import org.springframework.core.StandardReflectionParameterNameDiscoverer;
 
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +41,7 @@ public class Main {
         User user = new User();
         user.setName("xieyang");
         user.setAge(28);
-        faceA.baseParams2("谢谢这是描述",99,user);
+        faceA.addUser(user);
 
 
         //faceA.addUser(user);

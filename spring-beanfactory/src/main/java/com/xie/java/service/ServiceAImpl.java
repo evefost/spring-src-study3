@@ -33,7 +33,7 @@ public class ServiceAImpl {
 
     @Tag(value = "addUser")
     String addUser(User user){
-        System.out.println("收到添加用户");
+        System.out.println("收到添加用户: "+JSON.toJSONString(user));
        return "收到添加用户";
     };
 

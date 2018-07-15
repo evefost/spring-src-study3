@@ -23,8 +23,9 @@ class AnnotationFactoryBean implements FactoryBean<Object>, InitializingBean, Ap
 
     private String topic;
 
-    private Map<String,List<MethodInfo>> allTopicMethods;
+    private Map<String,List<MethodInfo>> producerMethods;
 
+    private Map<String,List<MethodInfo>> consumerMetods;
 
     public Object getObject() throws Exception {
         //创建代理
@@ -41,16 +42,24 @@ class AnnotationFactoryBean implements FactoryBean<Object>, InitializingBean, Ap
         }
 
         //2.调用代理接口时，通过方法签名去匹配上面的信息
-        Object proxy = Proxy.newProxyInstance(AnnotationFactoryBean.class.getClassLoader(), new Class[]{type}, new VirtualInvocationHandler(applicationContext,allTopicMethods,topicTagMap));
+        Object proxy = Proxy.newProxyInstance(AnnotationFactoryBean.class.getClassLoader(), new Class[]{type}, new VirtualInvocationHandler(applicationContext,consumerMetods,topicTagMap));
         return proxy;
     }
 
-    public Map<String, List<MethodInfo>> getAllTopicMethods() {
-        return allTopicMethods;
+    public Map<String, List<MethodInfo>> getProducerMethods() {
+        return producerMethods;
     }
 
-    public void setAllTopicMethods(Map<String, List<MethodInfo>> allTopicMethods) {
-        this.allTopicMethods = allTopicMethods;
+    public void setProducerMethods(Map<String, List<MethodInfo>> producerMethods) {
+        this.producerMethods = producerMethods;
+    }
+
+    public Map<String, List<MethodInfo>> getConsumerMetods() {
+        return consumerMetods;
+    }
+
+    public void setConsumerMetods(Map<String, List<MethodInfo>> consumerMetods) {
+        this.consumerMetods = consumerMetods;
     }
 
     public Class<?> getType() {

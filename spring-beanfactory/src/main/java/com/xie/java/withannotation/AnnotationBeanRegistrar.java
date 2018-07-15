@@ -22,7 +22,13 @@ import java.util.*;
 //@Component
 public class AnnotationBeanRegistrar extends BeanRegistrar {
 
-    private Map<String,List<MethodInfo>> allTopicMethods = new HashMap<String, List<MethodInfo>>();
+
+    private Map<String,List<MethodInfo>> producerMethods = new HashMap<String, List<MethodInfo>>();
+
+
+    private Map<String,List<MethodInfo>> consumerMetods = new HashMap<String, List<MethodInfo>>();
+
+
 
     @Override
     protected void registerVirtualApi(BeanDefinitionRegistry registry,String name,
@@ -37,7 +43,8 @@ public class AnnotationBeanRegistrar extends BeanRegistrar {
         definition.addPropertyValue("name", name);
         definition.addPropertyValue("type", className);
         definition.addPropertyValue("topic", attritutes.get("value"));
-        definition.addPropertyValue("allTopicMethods", allTopicMethods);
+        definition.addPropertyValue("producerMethods", producerMethods);
+        definition.addPropertyValue("consumerMetods", consumerMetods);
         definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
         AbstractBeanDefinition beanDefinition = definition.getBeanDefinition();
         beanDefinition.setPrimary(false);
@@ -85,10 +92,10 @@ public class AnnotationBeanRegistrar extends BeanRegistrar {
                             MethodInfo methodInfo = new MethodInfo();
                             methodInfo.setTargetClass(targetClass);
                             methodInfo.setMethod(method);
-                            List<MethodInfo> methodList = allTopicMethods.get(key);
+                            List<MethodInfo> methodList = consumerMetods.get(key);
                             if(methodList == null){
                                 methodList = new ArrayList<MethodInfo>();
-                                allTopicMethods.put(key,methodList);
+                                consumerMetods.put(key,methodList);
                             }
                             methodList.add(methodInfo);
                         }
