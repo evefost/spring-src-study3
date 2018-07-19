@@ -17,6 +17,7 @@
         <module>spring-transation</module>
         <module>spring-beans-src</module>
         <module>spring-beanfactory</module>
+        <module>spring-boot-auto</module>
     </modules>
 
     <properties>

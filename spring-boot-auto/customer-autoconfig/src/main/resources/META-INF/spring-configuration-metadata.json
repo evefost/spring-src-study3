@@ -1,0 +1,23 @@
+{
+  "hints": [
+    {
+      "name": "customer.mq.client.name",
+      "value": ""
+    }
+  ],
+  "groups": [
+    {
+      "name": "rockmq属性配置",
+      "type": "com.xie.auto.config.MqConfigProperties",
+      "sourceType": "com.xie.auto.config.MqConfigProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "customer.mq.client.name",
+      "type": "java.lang.String",
+      "sourceType": "com.xie.auto.config.MqConfigProperties",
+      "description": "实例名称"
+    }
+  ]
+}

@@ -10,10 +10,10 @@ import java.lang.annotation.*;
 public @interface Topic {
 
     @AliasFor("value")
-    public String topic() default "";
+    String topic() default "";
 
     @AliasFor("topic")
-    public String value() default "";
+    String value() default "";
 
 
 
