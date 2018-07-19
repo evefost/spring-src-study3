@@ -3,6 +3,20 @@
     {
       "name": "customer.mq.client.name",
       "value": ""
+    },
+    {
+      "name": "customer.rocketmq.enabled",
+      "values": [
+        true,
+        false
+      ]
+    },
+    {
+      "name": "customer.activemq.enabled",
+      "values": [
+        true,
+        false
+      ]
     }
   ],
   "groups": [
@@ -18,6 +32,18 @@
       "type": "java.lang.String",
       "sourceType": "com.xie.auto.config.MqConfigProperties",
       "description": "实例名称"
+    },
+    {
+      "name": "customer.rocketmq.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.xie.auto.config.MqConfigProperties",
+      "description": "开启rocketmq"
+    },
+    {
+      "name": "customer.activemq.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.xie.auto.config.MqConfigProperties",
+      "description": "开启activemq"
     }
   ]
 }

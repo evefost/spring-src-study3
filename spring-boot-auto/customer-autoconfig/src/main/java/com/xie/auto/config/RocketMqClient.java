@@ -3,7 +3,7 @@ package com.xie.auto.config;
 public class RocketMqClient implements Client{
 
     public boolean start() {
-        System.out.println("rocket client start");
+        System.out.println("rocketmq client start");
         return true;
     }
 
