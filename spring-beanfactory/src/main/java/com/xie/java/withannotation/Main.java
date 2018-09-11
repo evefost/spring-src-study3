@@ -4,7 +4,6 @@ import com.xie.java.InterFaceA;
 import com.xie.java.beans.User;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.HashSet;
@@ -13,7 +12,6 @@ import java.util.Set;
 /**
  * 模拟一个接品，通过mq发送主题及top
  */
-@EnableFeignClients
 public class Main {
 
     public static void main(String[] args) throws IllegalAccessException, ClassNotFoundException {

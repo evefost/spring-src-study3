@@ -1,18 +1,14 @@
 package com.xie.java.simple;
 
 import com.xie.java.InterFaceA;
-import com.xie.java.simple.BeanRegistrar;
-import com.xie.java.simple.MyTestFactoryBean;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-@EnableFeignClients
+
 public class Main {
 
     public static void main(String[] args) throws IllegalAccessException {
