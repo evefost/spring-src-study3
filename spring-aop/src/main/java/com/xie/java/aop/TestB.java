@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by Administrator on 2018/3/5.
  */
-//@Component("testA")
+@Component("testB")
 public class TestB {
 
   @Autowired

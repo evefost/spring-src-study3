@@ -1,13 +1,14 @@
-package com.xie.java.aop;
+package com.xie.context;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
+import javax.inject.Named;
 
 /**
  * Created by Administrator on 2018/3/5.
  */
-@Component("testA")
-public class TestA {
+@Named
+public class TestC {
 
   @Autowired
   TestB testB;

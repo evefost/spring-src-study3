@@ -5,4 +5,5 @@ package com.xie.java.mvc;
  */
 public class AppUser {
 
+
 }

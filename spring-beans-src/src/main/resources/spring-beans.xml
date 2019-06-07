@@ -4,6 +4,19 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	   		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
-  <bean id="testBean" class="com.xie.java.beans.TestBean"/>
+  <bean id="testBean" class="com.xie.java.beans.TestBean">
+    <property name="user" ref="users"></property>
+  </bean>
 
+  <bean id="users" class="com.xie.java.beans.User">
+    <property name="name" value="ssss"></property>
+  </bean>
+
+  <bean id="tesss" class="com.xie.java.beans.Tesss">
+
+  </bean>
+
+  <bean id="sss" class="com.xie.java.beans.DynamMod">
+
+  </bean>
 </beans>

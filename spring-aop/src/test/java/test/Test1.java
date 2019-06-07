@@ -1,7 +1,7 @@
 package test;
 
-import com.xie.java.aop.TestA;
 import com.xie.java.aop.TestBean;
+import org.springframework.beans.BeansException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -11,7 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Test1 {
 
 
-  public static void main(String[] args){
+  public static void main(String[] args) throws BeansException {
     ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring-aop.xml");
 //    TestA testBean = (TestA) context.getBean("testA");
     TestBean testBean = (TestBean) context.getBean("testBean");
