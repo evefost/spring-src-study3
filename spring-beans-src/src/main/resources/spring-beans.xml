@@ -13,10 +13,6 @@
   </bean>
 
   <bean id="tesss" class="com.xie.java.beans.Tesss">
-
   </bean>
 
-  <bean id="sss" class="com.xie.java.beans.DynamMod">
-
-  </bean>
 </beans>

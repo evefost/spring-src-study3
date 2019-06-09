@@ -1,0 +1,15 @@
+
+@startuml
+Client -> Resource: main
+Resource -> Resource: 加载配置文件xml
+Client -> BeanDefinitionReader: 把resource传给reader
+BeanDefinitionReader -> BeanDefinitionReader: 解释resource并生成相应beanDefinition
+BeanDefinitionReader -> BeanDefinitionRegistry: registerBeanDefinition()
+Client -> BeanFactory: getBean(xxx)
+BeanFactory -> BeanFactory: doGetBean(xxx)
+BeanFactory -> BeanDefinitionRegistry: getBeanDefinition(xxx)
+BeanDefinitionRegistry -> BeanFactory: 返回beanDefinition
+BeanFactory -> BeanFactory: createBean(xxx)
+BeanFactory -> Client: 返回 xxx 实例
+
+@enduml

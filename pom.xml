@@ -17,10 +17,12 @@
         <module>spring-transation</module>
         <module>spring-beans-src</module>
         <module>spring-beanfactory</module>
+        <module>spring-xsd-defined</module>
     </modules>
 
     <properties>
         <spring.version>4.3.20.RELEASE</spring.version>
+        <junit.version>4.12</junit.version>
         
     </properties>
 
@@ -81,6 +83,13 @@
                 <artifactId>spring-jdbc</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

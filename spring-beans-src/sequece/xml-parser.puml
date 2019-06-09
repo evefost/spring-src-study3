@@ -1,0 +1,20 @@
+
+@startuml
+Client -> XmlBeanDefinitionReader: 创建XmlReader
+Client -> XmlBeanDefinitionReader: loadBeanDefinitions(resource)\r加载配置文件xml
+XmlBeanDefinitionReader -> XmlBeanDefinitionReader: doLoadBeanDefinitions()处理资源流
+XmlBeanDefinitionReader -> XmlBeanDefinitionReader: doLoadDocument(inputSource,resource)
+XmlBeanDefinitionReader -> DefaultDocumentLoader: loadDocument() xml 加载成document
+DefaultDocumentLoader -> XmlBeanDefinitionReader: 返回document
+XmlBeanDefinitionReader -> XmlBeanDefinitionReader: registerBeanDefinitions(doc)
+XmlBeanDefinitionReader -> BeanDefinitionDocumentReader: registerBeanDefinitions(doc,readerContext)\r readerContext内封装了BeanDefinitionRegistry
+BeanDefinitionDocumentReader -> BeanDefinitionDocumentReader: 1.doRegisterBeanDefinitions(root)\r解释doc根标签
+BeanDefinitionDocumentReader -> BeanDefinitionDocumentReader: 2.parseBeanDefinitions(doc,delegate)\r从根标签开始，遍历所有子标签
+BeanDefinitionDocumentReader -> BeanDefinitionDocumentReader: 3.parseDefaultElement(ele,delegate)\r默认标签解释
+BeanDefinitionDocumentReader -> BeanDefinitionDocumentReader: 4.processBeanDefinition(ele)处理某个bean标签
+BeanDefinitionDocumentReader -> BeanDefinitionParserDelegate: 5.parseBeanDefinitionElement(ele)\r默认交给代理者处理解释细节
+BeanDefinitionParserDelegate -> BeanDefinitionDocumentReader: 解释完后返回BeanDefinitionHolder
+BeanDefinitionDocumentReader -> BeanDefinitionReaderUtils: 6.registerBeanDefinition(bdHolder,registry)\r把beanDefinition注册到registry
+BeanDefinitionReaderUtils -> BeanDefinitionRegistry: registerBeanDefinition(beanName,beanDefinition)\r最终把beanDefinition注册到registry
+@enduml
+
