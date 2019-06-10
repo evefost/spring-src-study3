@@ -18,6 +18,7 @@ public class Test1 {
     ClassPathResource classPathResource = new ClassPathResource("spring-beans.xml");
     BeanFactory factory = new XmlBeanFactory(classPathResource);
     Object sss = factory.getBean("sss");
+
     ConfigurableBeanFactory configurableBeanFactory = (ConfigurableBeanFactory) factory;
     configurableBeanFactory.addBeanPostProcessor((BeanPostProcessor) sss);
     Object testBean = factory.getBean("testBean");

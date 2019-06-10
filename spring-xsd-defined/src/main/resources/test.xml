@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ps="http://www.xie.com/schema/person"
+       xmlns:sc="http://www.xie.com/schema/school"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.xie.com/schema/person
+       http://www.xie.com/schema/person.xsd
+       http://www.xie.com/schema/school
+       http://www.xie.com/schema/school.xsd">
+    <!--注意，命名空间定义的引用
+      在使用XML Schema 文档对XML实例文档进行检验，除了要声明名称空间外
+      (xmlns="http://www.springframework.org/schema/beans")，
+      还必须指定该名称空间所对应的XML Schema文档的存储位置.
+      通过schemaLocation属性来指定名称空间所对应的XML Schema文档的存储位置，
+      它包含两个部分,一部分是名称空间的URI,第二部分就是该名称空间所标识的XML（key,value）
+      Schema文件位置或URL地址xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-2.5.xsd）
+    -->
+    <!--schemaLocation 指定了用于解析和校验xml的定义文件（xsd）的位置。-->
+    <ps:student id="testStudent" userName="cong" email="mail.163.com" age="16"/>
+
+    <!--<xie:school id="school" name="shenzheng zhong xue" address="深南大道102" students="123"/>-->
+    <ps:teacher className="com.xie.java.xsd.beans.Teacher" />
+
+    <sc:school id="school" students="45" name="深圳中学" address="广东省深圳市深南大道107"/>
+
+</beans>

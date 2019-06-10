@@ -1,0 +1,2 @@
+http\://www.xie.com/schema/person=com.xie.java.xsd.handler.PersonNamespaceHandler
+http\://www.xie.com/schema/school=com.xie.java.xsd.handler.SchoolNamespaceHandler

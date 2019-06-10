@@ -1,0 +1,29 @@
+
+@startuml
+
+Client -> DefaultListableBeanFactory: getBean(beanName)从factory里获取bean实例
+DefaultListableBeanFactory -> DefaultListableBeanFactory: doGetBean(beanName)
+DefaultListableBeanFactory -> DefaultListableBeanFactory:transformedBeanName(name)beanName转换，\r如果是&开头的将被截取后面的字符串
+DefaultListableBeanFactory -> DefaultListableBeanFactory:getMergedLocalBeanDefinition(beanName)\r据beanName从容器里获取对应的beanDefinitionn
+DefaultListableBeanFactory -> DefaultListableBeanFactory: getBeanDefinition(beanName)\r据beanName从registry里获取相应的beanDefinition
+DefaultListableBeanFactory -> DefaultListableBeanFactory: 返回beanDefinition
+DefaultListableBeanFactory-> DefaultListableBeanFactory:resolveBeanClass(mbd, beanName)获取类信息
+DefaultListableBeanFactory -> DefaultListableBeanFactory: createBean(beanName)此处ioc过程开始
+DefaultListableBeanFactory -> DefaultListableBeanFactory: resolveBeforeInstantiation(beanName, mbdToUse)\r创建实例前遍历BeanPostProcessor接入\r允许创建一个proxy实例代替实际的bean
+DefaultListableBeanFactory -> DefaultListableBeanFactory:doCreateBean(beanName, mbdToUse, args)开始创建bean
+DefaultListableBeanFactory -> DefaultListableBeanFactory:createBeanInstance(beanName, mbd, args)\r利用beanDefinition，通过反射创建bean，此时bean属性还没有注入
+DefaultListableBeanFactory -> DefaultListableBeanFactory: applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName)\r在注入bean属性前\r开放接口MergedBeanDefinitionPostProcessor处理修改beanDefinition
+DefaultListableBeanFactory -> DefaultListableBeanFactory: addSingletonFactory(beanName,singletonFactory)\r如果是单例提前expose，先存入容器
+DefaultListableBeanFactory -> DefaultListableBeanFactory: populateBean(beanName, mbd, instanceWrapper) 开始注入属性
+DefaultListableBeanFactory -> DefaultListableBeanFactory: applyPropertyValues(beanName, mbd, bw, pvs);遍历所有需注入的属性
+DefaultListableBeanFactory -> BeanDefinitionValueResolver: resolveValueIfNecessary(pv, originalValue)\r处理属性嵌套
+BeanDefinitionValueResolver -> BeanDefinitionValueResolver: resolveReference(argName, ref)\r处理属性引用依赖，依赖形式有多种，这只举例引用依赖这种
+BeanDefinitionValueResolver -> DefaultListableBeanFactory:getBean(beanName)\r这里已经是递归处理创建bean了
+DefaultListableBeanFactory -> DefaultListableBeanFactory: initializeBean(beanName, exposedObject, mbd)初台化bean
+DefaultListableBeanFactory -> DefaultListableBeanFactory: applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName)\r遍历BeanPostProcessor的postProcessBeforeInitialization方法,\r aop及其它的扩展就是基于此接口
+DefaultListableBeanFactory -> DefaultListableBeanFactory: invokeInitMethods(beanName, wrappedBean, mbd);\r如果当前bean实现了InitializingBean将调用afterPropertiesSet方法
+DefaultListableBeanFactory -> DefaultListableBeanFactory: applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName)\r遍历BeanPostProcessor的postProcessAfterInitialization方法，aop及其它的扩展就是基于此接口
+DefaultListableBeanFactory -> DefaultListableBeanFactory:getObjectForBeanInstance(prototypeInstance, name, beanName, mbd)\r处里bean实例是否实现FactoryBean接口，该接也是一个非常重扩展口
+DefaultListableBeanFactory -> Client: 返回 xxx 实例
+
+@enduml

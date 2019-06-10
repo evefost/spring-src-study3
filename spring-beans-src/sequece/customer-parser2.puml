@@ -2,19 +2,15 @@
 @startuml
 Client -> Client: 创建XmlReader
 Client -> XmlBeanDefinitionReader: loadBeanDefinitions(resource)\r加载配置文件xml
-XmlBeanDefinitionReader -> XmlBeanDefinitionReader: doLoadBeanDefinitions()处理资源流
-XmlBeanDefinitionReader -> XmlBeanDefinitionReader: doLoadDocument(inputSource,resource)
-XmlBeanDefinitionReader -> DefaultDocumentLoader: loadDocument() xml 加载成document
-DefaultDocumentLoader -> XmlBeanDefinitionReader: 返回document
-XmlBeanDefinitionReader -> XmlBeanDefinitionReader: registerBeanDefinitions(doc)
+XmlBeanDefinitionReader -> DefaultDocumentLoader: loadDocument() xml 加载成doc
 XmlBeanDefinitionReader -> BeanDefinitionDocumentReader: registerBeanDefinitions(doc,readerContext)\r readerContext内封装了BeanDefinitionRegistry
 BeanDefinitionDocumentReader -> BeanDefinitionDocumentReader: 1.doRegisterBeanDefinitions(root)\r解释doc根标签
 BeanDefinitionDocumentReader -> BeanDefinitionDocumentReader: 2.parseBeanDefinitions(doc,delegate)\r从根标签开始，遍历所有子标签
 BeanDefinitionDocumentReader -> BeanDefinitionParserDelegate: 3.parseCustomElement(ele)自定标签解释
-BeanDefinitionParserDelegate -> BeanDefinitionParserDelegate: 4.parseCustomElement(ele,null)开始自定义标签解释
+BeanDefinitionParserDelegate -> BeanDefinitionParserDelegate: 4.parseCustomElement(ele,null)\r开始自定义标签解释
 BeanDefinitionParserDelegate -> NamespaceHandlerResolver:把namespaceUrl作为key获得相应的handler
 NamespaceHandlerResolver -> BeanDefinitionParserDelegate:返回相应标签handler
-BeanDefinitionParserDelegate -> NamespaceHandlerSupport:parse(element,parserContext)准备开始解释标签细节点处理
+BeanDefinitionParserDelegate -> NamespaceHandlerSupport:parse(element,parserContext)\r准备开始解释标签细节点处理
 NamespaceHandlerSupport ->NamespaceHandlerSupport:findParserForElement(ele,parserContext)\r据标签名获取对应的BeanDefinitionParser\r如<context:component-scan>\n将得到ComponentScanBeanDefinitionParser
 NamespaceHandlerSupport->AbstractBeanDefinitionParser: parse(ele,parseContext)\r调用BeanDefinitionParser解释出beanDefinition
 AbstractBeanDefinitionParser->AbstractBeanDefinitionParser:registerBeanDefinition(definition,egistry)将beanDefinition注册到registry

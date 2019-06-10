@@ -1,6 +1,6 @@
 
 @startuml
-Client -> XmlBeanDefinitionReader: 创建XmlReader
+Client -> Client: 创建XmlReader
 Client -> XmlBeanDefinitionReader: loadBeanDefinitions(resource)\r加载配置文件xml
 XmlBeanDefinitionReader -> XmlBeanDefinitionReader: doLoadBeanDefinitions()处理资源流
 XmlBeanDefinitionReader -> XmlBeanDefinitionReader: doLoadDocument(inputSource,resource)

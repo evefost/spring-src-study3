@@ -9,8 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>spring-beans-src</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>spring-xsd-defined</artifactId>
     <build>
         <plugins>
             <plugin>
@@ -25,6 +24,7 @@
     </build>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
@@ -35,6 +35,9 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+
     </dependencies>
+
 
 </project>

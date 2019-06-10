@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.xie.com/schema/school"
+           elementFormDefault="qualified">
+    <!--
+        schema xmlns:targetNamespace
+        targetNamespace :1表示文档中要定义的元素来自什么命名空间
+        xmlns:表示此文档的默认命名空间是什么
+        elementFormDefault="qualified": 表示要求xml文档的每一个元素都要有命名空间指定
+        -->
+
+
+    <xs:element name="school">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:string"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="address" type="xs:string"/>
+            <xs:attribute name="students" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+
+
+</xs:schema>
