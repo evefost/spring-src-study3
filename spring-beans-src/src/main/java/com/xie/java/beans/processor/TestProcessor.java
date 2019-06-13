@@ -13,6 +13,6 @@ public class TestProcessor implements ITestProcessor {
 
     @Override
     public void doSomething() {
-        System.out.println("正在处理某些事情");
+        System.out.println("target 正在处理某些事情");
     }
 }

@@ -8,7 +8,6 @@ import com.xie.java.beans.processor.Processor1;
 import com.xie.java.beans.processor.TestProcessor;
 import org.junit.Test;
 import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
@@ -30,7 +29,7 @@ public class BeanFactoryTest {
 
 
     /**
-     * 加载默认标签定议的beanDefinitions
+     * 1.加载默认标签定议的beanDefinitions
      */
     @Test
     public void defaultXmlBeanDefinitions(){
@@ -47,7 +46,7 @@ public class BeanFactoryTest {
     }
 
     /**
-     * 手动添加beanDefinition到registry
+     * 2.手动添加beanDefinition到registry
      */
     @Test
     public void customerBeanDefinitions() {
@@ -74,7 +73,7 @@ public class BeanFactoryTest {
 
 
     /**
-     * 手动添加BeanPostProcessor
+     * 3.手动添加BeanPostProcessor
      */
     @Test
     public void customerPostProcessor() {
@@ -102,7 +101,7 @@ public class BeanFactoryTest {
 
 
     /**
-     * 手动添加BeanPostProcessor
+     * 3.自定义扫描beanDefinition 依赖注入
      */
     @Test
     public void customerAnnotation() {
@@ -114,8 +113,6 @@ public class BeanFactoryTest {
 
         GenericBeanDefinition genericBeanDefinition;
         for (Class c : classes) {
-
-
             if (c.isAnnotationPresent(Component.class)) {
                 genericBeanDefinition = new GenericBeanDefinition();
                 genericBeanDefinition.setBeanClass(c);
@@ -124,23 +121,18 @@ public class BeanFactoryTest {
                 genericBeanDefinition.setPropertyValues(values);
                 for (Field f : fields) {
                     f.setAccessible(true);
-                    PropertyValue value;
                     if (f.isAnnotationPresent(Autowired.class)) {
                         String beanName = f.getName();
                         RuntimeBeanReference runtimeBeanReference = new RuntimeBeanReference(beanName);
-                        value = new PropertyValue(f.getName(), runtimeBeanReference);
                         values.add(f.getName(), runtimeBeanReference);
                     }
                 }
                 registry.registerBeanDefinition(c.getSimpleName(), genericBeanDefinition);
             }
         }
-        factory.getBean("Techer");
+        Object techer = factory.getBean("Techer");
         factory.preInstantiateSingletons();
-
         System.out.println("===");
-
-
     }
 
 
