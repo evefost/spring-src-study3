@@ -23,7 +23,8 @@
     <properties>
         <spring.version>4.3.20.RELEASE</spring.version>
         <junit.version>4.12</junit.version>
-        
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencyManagement>
@@ -93,6 +94,7 @@
 
         </dependencies>
     </dependencyManagement>
+
 
 
 </project>

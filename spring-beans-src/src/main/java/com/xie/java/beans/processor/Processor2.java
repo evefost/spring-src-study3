@@ -1,23 +1,25 @@
-package com.xie.java.beans;
+package com.xie.java.beans.processor;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
- * Created by xieyang on 19/6/7.
+ * 类说明
+ * <p>
+ *
+ * @author 谢洋
+ * @version 1.0.0
+ * @date 2019/6/13
  */
-public class TestPostProcessor implements BeanPostProcessor {
+public class Processor2 implements BeanPostProcessor {
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        System.out.println("postProcessBeforeInitialization name:"+bean.getClass().getName());
-        return bean;
+        return null;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        System.out.println("postProcessAfterInitialization name:"+bean.getClass().getName());
-
-        return bean;
+        return null;
     }
 }

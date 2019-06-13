@@ -1,0 +1,14 @@
+
+@startuml
+Client -> Client: 创建Resource，加载xml配置信息
+Client -> BeanDefinitionReader: 把resource传给reader
+BeanDefinitionReader -> BeanDefinitionReader: 解释resource并生成相应beanDefinition
+BeanDefinitionReader -> BeanDefinitionRegistry: registerBeanDefinition()
+Client -> BeanFactory: getBean(beanName)从factory里获取bean实例
+BeanFactory -> BeanFactory: doGetBean(beanName)
+BeanFactory -> BeanDefinitionRegistry: getBeanDefinition(beanName)\r据beanName从registry里获取相应的beanDefinition
+BeanDefinitionRegistry -> BeanFactory: 返回beanDefinition
+BeanFactory -> BeanFactory: createBean(beanName)此处ioc过程开始
+BeanFactory -> Client: 返回 xxx 实例
+
+@enduml
