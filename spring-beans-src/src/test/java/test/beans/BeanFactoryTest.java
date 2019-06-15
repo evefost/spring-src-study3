@@ -3,9 +3,9 @@ package test.beans;
 import com.xie.java.beans.CustomerBean;
 import com.xie.java.beans.annotatio.Autowired;
 import com.xie.java.beans.annotatio.Component;
-import com.xie.java.beans.processor.ITestProcessor;
-import com.xie.java.beans.processor.Processor1;
-import com.xie.java.beans.processor.TestProcessor;
+import com.xie.java.beans.processor.ITarget;
+import com.xie.java.beans.processor.MyPostProcessor;
+import com.xie.java.beans.processor.Target;
 import org.junit.Test;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.BeanFactory;
@@ -85,15 +85,15 @@ public class BeanFactoryTest {
 
         //1.创建Processor BeanDefinition
         GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
-        beanDefinition.setBeanClass(Processor1.class);
+        beanDefinition.setBeanClass(MyPostProcessor.class);
         registry.registerBeanDefinition("processor1", beanDefinition);
         ((DefaultListableBeanFactory) factory).addBeanPostProcessor((BeanPostProcessor) factory.getBean("processor1"));
 
         //添加目标实例
         GenericBeanDefinition targetDf = new GenericBeanDefinition();
-        targetDf.setBeanClass(TestProcessor.class);
+        targetDf.setBeanClass(Target.class);
         registry.registerBeanDefinition("testTarget", targetDf);
-        ITestProcessor bean = (ITestProcessor) factory.getBean("testTarget");
+        ITarget bean = (ITarget) factory.getBean("testTarget");
         bean.doSomething();
         System.out.println("ssss");
 

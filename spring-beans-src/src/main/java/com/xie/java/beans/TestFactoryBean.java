@@ -6,15 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Created by xieyang on 19/4/17.
  */
-public class Tesss implements FactoryBean {
+public class TestFactoryBean implements FactoryBean {
 
     @Autowired
     public Object getObject() throws Exception {
-        return new Object();
+        return new User();
     }
 
     public Class<?> getObjectType() {
-        return null;
+        return User.class;
     }
 
     public boolean isSingleton() {

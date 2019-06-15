@@ -15,7 +15,7 @@ import java.lang.reflect.Proxy;
  * @version 1.0.0
  * @date 2019/6/13
  */
-public class Processor1 implements BeanPostProcessor {
+public class MyPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -24,19 +24,30 @@ public class Processor1 implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(final Object bean, String beanName) throws BeansException {
-        if (bean instanceof ITestProcessor) {
+        if (bean instanceof ITarget) {
             Class<?> aClass = bean.getClass();
             Class<?>[] interfaces = aClass.getInterfaces();
             Object proxy = Proxy.newProxyInstance(getClass().getClassLoader(), interfaces, new InvocationHandler() {
                 @Override
                 public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+                    Throwable ex = null;
                     try {
-                        System.out.println("processor1 处理前.....");
-                        return method.invoke(bean, objects);
-                    } finally {
-                        System.out.println("processor1 处理后.....");
-                    }
+                        System.out.println("开启事务...");
+                        try {
+                            return method.invoke(bean, objects);
+                        }catch (Throwable throwable){
+                            ex = throwable;
+                            System.out.println("发生异常");
+                            throw  throwable;
+                        }
 
+                    } finally {
+                        if(ex == null){
+                            System.out.println("提交事务....");
+                        }else {
+                            System.out.println("发生异常，rollback data "+ex.getLocalizedMessage());
+                        }
+                    }
                 }
             });
             return proxy;

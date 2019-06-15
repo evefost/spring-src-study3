@@ -1,6 +1,5 @@
 package test.beans;
 
-import com.xie.java.beans.TestPostProcessor;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -29,7 +28,6 @@ public class Test2 {
     reader.loadBeanDefinitions(classPathResource);
 
     GenericBeanDefinition testPostBeanDefinition = new GenericBeanDefinition();
-    testPostBeanDefinition.setBeanClass(TestPostProcessor.class);
     registry.registerBeanDefinition("testProcessor",testPostBeanDefinition);
 
     Object testProcessor = factory.getBean("testProcessor");

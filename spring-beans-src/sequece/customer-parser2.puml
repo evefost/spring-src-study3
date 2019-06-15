@@ -6,7 +6,7 @@ XmlBeanDefinitionReader -> DefaultDocumentLoader: loadDocument() xml 加载成do
 XmlBeanDefinitionReader -> BeanDefinitionDocumentReader: registerBeanDefinitions(doc,readerContext)\r readerContext内封装了BeanDefinitionRegistry
 BeanDefinitionDocumentReader -> BeanDefinitionDocumentReader: 1.doRegisterBeanDefinitions(root)\r解释doc根标签
 BeanDefinitionDocumentReader -> BeanDefinitionDocumentReader: 2.parseBeanDefinitions(doc,delegate)\r从根标签开始，遍历所有子标签
-BeanDefinitionDocumentReader -> BeanDefinitionParserDelegate: 3.parseCustomElement(ele)自定标签解释
+BeanDefinitionDocumentReader -> BeanDefinitionParserDelegate: 3.parseCustomElement(ele)自定标签解释(根据元素的的命名空间判断)
 BeanDefinitionParserDelegate -> BeanDefinitionParserDelegate: 4.parseCustomElement(ele,null)\r开始自定义标签解释
 BeanDefinitionParserDelegate -> NamespaceHandlerResolver:把namespaceUrl作为key获得相应的handler
 NamespaceHandlerResolver -> BeanDefinitionParserDelegate:返回相应标签handler

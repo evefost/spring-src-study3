@@ -12,7 +12,7 @@
     <property name="name" value="ssss"></property>
   </bean>
 
-  <bean id="tesss" class="com.xie.java.beans.Tesss">
+  <bean id="tesss" class="com.xie.java.beans.TestFactoryBean">
   </bean>
 
 </beans>

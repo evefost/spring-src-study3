@@ -13,6 +13,9 @@ public class CustomerBean {
     private String name = "xieyang";
 
 
+    /**
+     * 需要注入的对象
+     */
     private User user;
 
     public User getUser() {

@@ -8,6 +8,7 @@ package com.xie.java.beans.processor;
  * @version 1.0.0
  * @date 2019/6/13
  */
-public interface ITestProcessor {
+public interface ITarget {
+
     void doSomething();
 }
