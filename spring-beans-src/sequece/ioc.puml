@@ -8,7 +8,7 @@ DefaultListableBeanFactory -> DefaultListableBeanFactory:getMergedLocalBeanDefin
 DefaultListableBeanFactory -> DefaultListableBeanFactory: getBeanDefinition(beanName)\r据beanName从registry里获取相应的beanDefinition
 DefaultListableBeanFactory -> DefaultListableBeanFactory: 返回beanDefinition
 DefaultListableBeanFactory-> DefaultListableBeanFactory:resolveBeanClass(mbd, beanName)获取类信息
-DefaultListableBeanFactory -> DefaultListableBeanFactory: createBean(beanName)此处ioc过程开始
+DefaultListableBeanFactory -> DefaultListableBeanFactory: createBean(beanName)得到要他建bean的信息后就要创建实例了
 DefaultListableBeanFactory -> DefaultListableBeanFactory: resolveBeforeInstantiation(beanName, mbdToUse)\r创建实例前遍历BeanPostProcessor接入\r允许创建一个proxy实例代替实际的bean
 DefaultListableBeanFactory -> DefaultListableBeanFactory:doCreateBean(beanName, mbdToUse, args)开始创建bean
 DefaultListableBeanFactory -> DefaultListableBeanFactory:createBeanInstance(beanName, mbd, args)\r利用beanDefinition，通过反射创建bean，此时bean属性还没有注入
