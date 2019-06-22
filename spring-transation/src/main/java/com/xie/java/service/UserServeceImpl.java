@@ -7,11 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Administrator on 2018/3/2.
  */
-@Transactional
+
 public class UserServeceImpl implements UserService {
 
   private JdbcTemplate jdbcTemplate;
@@ -25,11 +26,16 @@ public class UserServeceImpl implements UserService {
    *
    * @param user
    */
+  @Transactional
   public void save(User user) {
     jdbcTemplate.update("INSERT INTO `user`(name,age) VALUES (?,?)",
         new Object[]{user.getName(),user.getAge()},
         new int[]{Types.VARCHAR,Types.INTEGER});
-    throw new RuntimeException("dfdfdf");
+    Random r = new Random();
+    if(r.nextBoolean()){
+      throw new RuntimeException("出错了...");
+    }
+
   }
 
 

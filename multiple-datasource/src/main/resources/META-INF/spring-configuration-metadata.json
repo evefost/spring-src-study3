@@ -1,0 +1,95 @@
+{
+  "hints": [
+    {
+      "name": "app.env.prefix",
+      "value": ""
+    },
+    {
+      "name": "spring.extend.mq.instanceName",
+      "value": ""
+    },
+    {
+      "name": "spring.extend.mq.serverAddr",
+      "value": "localhost"
+    },
+    {
+      "name": "spring.extend.mq.clientIP",
+      "value": "localhost"
+    },
+    {
+      "name": "spring.extend.mq.topic",
+      "value": "defautlTopic"
+    },
+    {
+      "name": "spring.extend.mq.subscribe",
+      "value": ""
+    },
+    {
+      "name": "spring.extend.mq.producer.enable",
+      "values": [false,true]
+    },
+    {
+      "name": "spring.extend.mq.consumer.enable",
+      "values": [false,true]
+    }
+  ],
+  "groups": [
+    {
+      "name": "rockmq属性配置",
+      "type": "com.xie.message.client.config.RocketmqProperties",
+      "sourceType": "com.xie.message.client.config.RocketmqProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.extend.mq.instanceName",
+      "type": "java.lang.String",
+      "sourceType": "com.xie.message.client.config.RocketmqProperties",
+      "description": "实例名称"
+    },
+    {
+      "name": "spring.extend.mq.serverAddr",
+      "type": "java.lang.String",
+      "sourceType": "com.xie.message.client.config.RocketmqProperties",
+      "description": "mq nameserver 集群地址，用“;”分割地址"
+    },
+    {
+      "name": "spring.extend.mq.clientIP",
+      "type": "java.lang.String",
+      "sourceType": "com.xie.message.client.config.RocketmqProperties",
+      "description": "实例ip"
+    },
+    {
+      "name": "spring.extend.mq.topic",
+      "type": "java.lang.String",
+      "sourceType": "com.xie.message.client.config.RocketmqProperties",
+      "description": "生产者默认主题 default_topic，可设定"
+    },
+    {
+      "name": "spring.extend.mq.subscribe",
+      "type": "java.lang.String",
+      "sourceType": "com.xie.message.client.config.RocketmqProperties",
+      "description": "消费者订阅主题,格式:topic1:tag1,topic2:tag2"
+    },
+
+    {
+      "name": "spring.extend.mq.producer.enable",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.xie.message.client.config.RocketmqProperties",
+      "description": "开启生产者端(默认为false)"
+    }
+  ,
+    {
+      "name": "spring.extend.mq.consumer.enable",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.xie.message.client.config.RocketmqProperties",
+      "description": "开启消费者端(默认为false)"
+    },
+    {
+      "name": "app.env.prefix",
+      "type": "java.lang.String",
+      "sourceType": "",
+      "description": "环境前辍配置,用于区分不同的环境配置，不配置为空字符串"
+    }
+  ]
+}

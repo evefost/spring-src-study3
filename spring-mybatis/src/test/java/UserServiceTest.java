@@ -13,7 +13,8 @@ public class UserServiceTest {
         User user = new User();
         user.setName("张三");
         user.setAge(12);
-        userMapper.insertUser(user);
+        //userMapper.insertUser(user);
+        userMapper.getUser(1);
         System.out.println();
     }
 }

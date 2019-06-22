@@ -18,6 +18,7 @@
         <module>spring-beans-src</module>
         <module>spring-beanfactory</module>
         <module>spring-xsd-defined</module>
+        <module>multiple-datasource</module>
     </modules>
 
     <properties>
