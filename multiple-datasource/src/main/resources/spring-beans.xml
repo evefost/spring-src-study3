@@ -6,35 +6,16 @@
 	   		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-  <context:property-placeholder ignore-unresolvable="true" location="classpath:application.properties"/>
-  <bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-    <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-    <property name="url" value="jdbc:mysql://localhost:3306/demo"/>
-    <property name="username" value="root"/>
-    <property name="password" value="root"/>
-    <property name="maxActive" value="50"/>
-    <property name="maxIdle" value="5"/>
-    <property name="defaultAutoCommit" value="true"/>
-  </bean>
-  <bean name="dataSource2" class="com.xie.java.datasource.MultipleDataSource">
-    <property name="masterUrls">
-      <map>
-        <entry key="1" value="jdbc:mysql://localhost:3306/demo" />
-        <entry key="2" value="jdbc:mysql://localhost:3306/demo2" />
-        <entry key="3" value="jdbc:mysql://localhost:3306/demo3" />
-      </map>
-    </property>
-  </bean>
 
+
+  <context:component-scan base-package="com.xie.java"/>
+
+  <bean name="dataSource" class="com.xie.java.datasource.MultipleDataSource"/>
   <bean name="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-    <property name="dataSource" ref="dataSource2"/>
+    <property name="dataSource" ref="dataSource"/>
     <property name="configLocation" value="spring-mybatis-config.xml"/>
 
   </bean>
-  <!--<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
-    <!--<property name="mapperInterface" value="com.xie.java.dao.UserMapper"/>-->
-    <!--<property name="sqlSessionFactory" ref="sqlSessionFactory"/>-->
-  <!--</bean>-->
   <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
     <property name="basePackage" value="com.xie.java.dao"/>
   </bean>

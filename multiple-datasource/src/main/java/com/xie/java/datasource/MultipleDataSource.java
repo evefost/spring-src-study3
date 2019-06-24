@@ -1,10 +1,7 @@
 package com.xie.java.datasource;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
@@ -24,23 +21,15 @@ import java.util.*;
  * @author xieyang
  * @date 19/6/21
  */
-public class MultipleDataSource extends AbstractDataSource implements InitializingBean, ApplicationContextAware, EnvironmentAware {
+public class MultipleDataSource extends AbstractDataSource implements InitializingBean,EnvironmentAware {
 
-    private Map<String, String> masterUrls;
-
-    private Map<String, String> slaserUrls;
 
     private Map<String, DataSource> dataSources;
 
-    private ApplicationContext applicationContext;
+    private Properties properties;
 
     private ConfigurableEnvironment environment;
 
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 
     @Override
     public void setEnvironment(Environment environment) {
@@ -60,23 +49,7 @@ public class MultipleDataSource extends AbstractDataSource implements Initializi
         throw new UnsupportedOperationException("Not supported by MultipleDataSource");
     }
 
-    public Map<String, String> getMasterUrls() {
-        return masterUrls;
-    }
 
-    public void setMasterUrls(Map<String, String> masterUrls) {
-        this.masterUrls = masterUrls;
-    }
-
-    public Map<String, String> getSlaserUrls() {
-        return slaserUrls;
-    }
-
-    public void setSlaserUrls(Map<String, String> slaserUrls) {
-        this.slaserUrls = slaserUrls;
-    }
-
-    private Properties properties;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -110,7 +83,6 @@ public class MultipleDataSource extends AbstractDataSource implements Initializi
     }
 
     private DataSource createDataSource(DataSourceProperties properties) {
-
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl(properties.getUrl());

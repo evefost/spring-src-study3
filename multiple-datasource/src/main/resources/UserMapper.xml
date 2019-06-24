@@ -11,5 +11,10 @@
     <select id="getUser" parameterType="java.lang.Integer" resultType="User">
         SELECT  * FROM user WHERE id=#{id}
     </select>
+
+    <select id="listUser"  resultType="User">
+        SELECT  * FROM user
+    </select>
+
 </mapper>
 

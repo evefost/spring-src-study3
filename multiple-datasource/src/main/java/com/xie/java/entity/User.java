@@ -1,14 +1,13 @@
 package com.xie.java.entity;
 
-import com.xie.java.datasource.annotation.DataSourceId;
-
 /**
  * Created by xieyang on 18/3/3.
  */
-@DataSourceId(id="")
 public class User {
+    private Integer id;
 
     private String name;
+
     private int age;
 
     public String getName() {
@@ -25,5 +24,13 @@ public class User {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
