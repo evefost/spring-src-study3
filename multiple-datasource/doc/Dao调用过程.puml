@@ -5,11 +5,13 @@ MapperProxy->MapperProxy: cachedMapperMethod(method)创建MapperMethod 并缓存
 MapperProxy->MapperMethod: execute(sqlSession, args) 开始执行，判断操作类型(增删改查)
 MapperMethod->MapperMethod: rowCountResult(rowCount)判断返回给
 MapperMethod->SqlSessionTemplate:据类型各种增删改查
-SqlSessionTemplate->SqlSessionInterceptor:invoke(proxy,method,args)
+SqlSessionTemplate->SqlSessionInterceptor:invoke(proxy,method,args)，开如操作，完后如果有事务则提交事务
 SqlSessionInterceptor->SqlSessionInterceptor:getSqlSession()获取session
 SqlSessionInterceptor->DefaultSqlSession:method.invoke(sqlSession,args)
 DefaultSqlSession->Configuration: getMappedStatement(statement)获取sql声明MappedStatement
 DefaultSqlSession->CachingExecutor: executor增删改查操作
-SimpleExecutor->SimpleExecutor:prepareStatement(handler,statementLog) 在这里会获取数据库连接
-SimpleExecutor->SpringManagedTransaction:getConnection() 内维护datasource
+SimpleExecutor->SimpleExecutor:prepareStatement(handler,statementLog) 在这里会获取数据库连接,创建Statement
+SimpleExecutor->SpringManagedTransaction:getConnection() 内部维护datasource
+SimpleExecutor->RoutingStatementHandler: 增删改查操作
+
 @enduml

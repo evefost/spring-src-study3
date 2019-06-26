@@ -11,7 +11,17 @@ import java.util.List;
  */
 public class UserServiceTest {
 
-
+    @Test
+    public void testAddUser(){
+        String[]  configurLocations = {"spring-beans.xml"};
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations) ;
+        UserService userService = context.getBean(UserService.class);
+        User user = new User();
+        user.setAge(111);
+        user.setName("王小二");
+        userService.save(user);
+        System.out.println(user);
+    }
 
 
     @Test
