@@ -1,7 +1,6 @@
 import com.xie.java.dao.UserMapper;
 import com.xie.java.entity.User;
 import com.xie.java.service.UserService;
-import org.apache.ibatis.session.Configuration;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -44,11 +43,5 @@ public class UserServiceTest {
     }
 
 
-    @Test
-    public void testGetMapperStatement(){
-        String[]  configurLocations = {"spring-beans.xml"};
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations);
-        context.getBean(Configuration.class);
 
-    }
 }

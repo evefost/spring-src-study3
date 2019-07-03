@@ -340,14 +340,19 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
                 "Property 'configuration' and 'configLocation' can not specified with together");
         this.sqlSessionFactory = buildSqlSessionFactory();
 
+        processDatabaseIds();
 
+    }
+
+
+    private void processDatabaseIds() throws IllegalAccessException, NoSuchFieldException {
         Collection<Class<?>> mappers = configuration.getMapperRegistry().getMappers();
         Field databaseField = MappedStatement.class.getDeclaredField("databaseId");
         databaseField.setAccessible(true);
         for (Class clzz : mappers) {
             String clzDatabaseId = null;
             if (clzz.isAnnotationPresent(DatabaseId.class)) {
-                clzDatabaseId = ((DatabaseId)clzz.getAnnotation(DatabaseId.class)).value();
+                clzDatabaseId = ((DatabaseId) clzz.getAnnotation(DatabaseId.class)).value();
             }
             Method[] methods = clzz.getMethods();
             for (Method m : methods) {
@@ -356,7 +361,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
                 if (stm == null) {
                     continue;
                 }
-                if(clzDatabaseId != null){
+                if (clzDatabaseId != null) {
                     databaseField.set(stm, clzDatabaseId);
                 }
                 if (m.isAnnotationPresent(DatabaseId.class)) {
@@ -367,8 +372,6 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
             }
 
         }
-        System.out.printf("xx");
-
     }
 
     /**

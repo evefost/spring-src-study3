@@ -27,5 +27,5 @@
         <property name="basePackage" value="com.xie.java.dao"/>
     </bean>
     <!--开启事务-->
-    <tx:annotation-driven transaction-manager="transactionManager" />
+    <tx:annotation-driven transaction-manager="transactionManager"  />
 </beans>
