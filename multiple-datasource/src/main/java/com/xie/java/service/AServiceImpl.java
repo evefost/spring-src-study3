@@ -1,6 +1,6 @@
 package com.xie.java.service;
 
-import com.xie.java.dao.UserMapper;
+import com.xie.java.dao.AMapper;
 import com.xie.java.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +13,12 @@ import java.util.List;
  */
 
 @Service
-public class UserServeceImpl implements UserService {
+public class AServiceImpl implements AService {
 
   @Autowired
-  private UserMapper userMapper;
+  private AMapper userMapper;
+
+
 
 
   /**
@@ -26,8 +28,12 @@ public class UserServeceImpl implements UserService {
   @Override
   @Transactional
   public void save(User user) {
-
     userMapper.insertUser(user);
+  }
+
+  @Override
+  public User queryById(Integer id) {
+    return userMapper.queryById(id);
   }
 
 

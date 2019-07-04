@@ -1,6 +1,8 @@
 package com.xie.java.datasource;
 
 import com.xie.java.datasource.annotation.DatabaseId;
+import com.xie.java.datasource.interceptor.QueryInterceptor;
+import com.xie.java.datasource.interceptor.UpdateInterceptor;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.cache.Cache;
@@ -339,8 +341,10 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
         state((configuration == null && configLocation == null) || !(configuration != null && configLocation != null),
                 "Property 'configuration' and 'configLocation' can not specified with together");
         this.sqlSessionFactory = buildSqlSessionFactory();
-
+        configuration.addInterceptor(new QueryInterceptor(MultipleDataSource.dataProperties));
+        configuration.addInterceptor(new UpdateInterceptor(MultipleDataSource.dataProperties));
         processDatabaseIds();
+
 
     }
 
@@ -384,6 +388,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @return SqlSessionFactory
      * @throws IOException if loading the config file failed
      */
+    @Override
     protected SqlSessionFactory buildSqlSessionFactory() throws IOException {
 
         Configuration configuration;

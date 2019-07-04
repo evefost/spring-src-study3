@@ -5,12 +5,17 @@
         >
 
 <configuration>
+
   <typeAliases>
     <typeAlias alias="User"  type="com.xie.java.entity.User"/>
   </typeAliases>
   <mappers>
-    <mapper resource="UserMapper.xml"/>
+    <mapper resource="mappers/AMapper.xml"/>
+    <mapper resource="mappers/BMapper.xml"/>
+    <mapper resource="mappers/CMapper.xml"/>
   </mappers>
+
+
 
 </configuration>
 

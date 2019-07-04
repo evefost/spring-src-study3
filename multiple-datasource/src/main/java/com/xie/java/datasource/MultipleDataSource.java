@@ -15,7 +15,10 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author xieyang
@@ -30,6 +33,12 @@ public class MultipleDataSource extends AbstractDataSource implements Initializi
 
     private ConfigurableEnvironment environment;
 
+    private String defaultDatabaseId;
+
+    public String getDefaultDatabaseId() {
+        return defaultDatabaseId;
+    }
+
 
     @Override
     public void setEnvironment(Environment environment) {
@@ -39,9 +48,12 @@ public class MultipleDataSource extends AbstractDataSource implements Initializi
 
     @Override
     public Connection getConnection() throws SQLException {
-        Random random = new Random();
-        int i = random.nextInt(3);
-        return dataSources.get("ds"+i).getConnection();
+        String databaseId = ServiceContextHolder.currentDatabaseId();
+        if (databaseId == null) {
+            databaseId = defaultDatabaseId;
+        }
+        System.out.println("当前先择的数据库:" + databaseId);
+        return dataSources.get(databaseId).getConnection();
     }
 
     @Override
@@ -49,15 +61,15 @@ public class MultipleDataSource extends AbstractDataSource implements Initializi
         throw new UnsupportedOperationException("Not supported by MultipleDataSource");
     }
 
-
+    public  static Map<String, DataSourceProperties> dataProperties;
 
     @Override
     public void afterPropertiesSet() throws Exception {
 
         doLoadloadProperties();
         DataSourcePropertiesParser dataSourcePropertiesParser = new DataSourcePropertiesParser(properties);
-        Map<String, DataSourceProperties> dataProperties = dataSourcePropertiesParser.parse();
-
+        dataProperties = dataSourcePropertiesParser.parse();
+        defaultDatabaseId = properties.getProperty("datasource.default.ds-id");
         dataSources = new HashMap<>(dataProperties.size());
         for (Map.Entry<String, DataSourceProperties> entry : dataProperties.entrySet()) {
             String dataId = entry.getKey();
@@ -71,15 +83,13 @@ public class MultipleDataSource extends AbstractDataSource implements Initializi
                 List<DataSourceProperties> slavers = value.getSlavers();
                 for (DataSourceProperties slaverProperties : slavers) {
                     DataSource slaverDataSource = createDataSource(slaverProperties);
-                    masterDataSource.addSlaver(slaverDataSource);
+                    masterDataSource.addSlaver(slaverProperties.getId(), slaverDataSource);
+                    dataSources.put(slaverProperties.getId(), slaverDataSource);
                 }
                 dataSources.put(dataId, masterDataSource);
             }
 
         }
-
-        System.out.printf("=====");
-
     }
 
     private DataSource createDataSource(DataSourceProperties properties) {

@@ -1,6 +1,6 @@
-import com.xie.java.dao.UserMapper;
+import com.xie.java.dao.AMapper;
 import com.xie.java.entity.User;
-import com.xie.java.service.UserService;
+import com.xie.java.service.AService;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -15,10 +15,10 @@ public class UserServiceTest {
     public void testAddUser(){
         String[]  configurLocations = {"spring-beans.xml"};
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations) ;
-        UserService userService = context.getBean(UserService.class);
+        AService userService = context.getBean(AService.class);
         User user = new User();
         user.setAge(111);
-        user.setName("王小二");
+        user.setName("666");
         userService.save(user);
         System.out.println(user);
     }
@@ -28,7 +28,7 @@ public class UserServiceTest {
     public void testGetUser(){
         String[]  configurLocations = {"spring-beans.xml"};
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations);
-        UserMapper userMapper = (UserMapper) context.getBean("userMapper");
+        AMapper userMapper = (AMapper) context.getBean("userMapper");
         User user1 = userMapper.getUser(1);
         System.out.println(user1);
     }
@@ -37,11 +37,21 @@ public class UserServiceTest {
     public void testListUser(){
         String[]  configurLocations = {"spring-beans.xml"};
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations);
-        UserService userService = context.getBean(UserService.class);
+        AService userService = context.getBean(AService.class);
         List<User> users = userService.getUsers();
         System.out.println(users);
     }
 
 
+    @Test
+    public void testCompositeAddUser() {
+        String[] configurLocations = {"spring-beans.xml"};
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations);
+        AService userService = context.getBean(AService.class);
+        User user = new User();
+        user.setAge(111);
+        user.setName("666");
+        System.out.println(user);
+    }
 
 }
