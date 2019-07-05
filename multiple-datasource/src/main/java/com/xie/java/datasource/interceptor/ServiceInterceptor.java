@@ -1,6 +1,8 @@
 package com.xie.java.datasource.interceptor;
 
 import com.xie.java.datasource.ServiceContextHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -10,7 +12,7 @@ import java.lang.reflect.Proxy;
  * Created by xieyang on 19/7/4.
  */
 public class ServiceInterceptor implements InvocationHandler {
-
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private Object target;
 
 
@@ -36,7 +38,7 @@ public class ServiceInterceptor implements InvocationHandler {
         }
         int increase = ServiceContextHolder.increase();
         if(increase == 1){
-            System.out.println("进入service ");
+            logger.debug("进入service ");
         }
         String databaseId = ServiceContextHolder.getDatabaseId(method);
         ServiceContextHolder.setCurrentDatabaseId(databaseId);
@@ -46,7 +48,7 @@ public class ServiceInterceptor implements InvocationHandler {
             int decrease = ServiceContextHolder.decrease();
             ServiceContextHolder.setCurrentDatabaseId(null);
             if (decrease == 0) {
-                System.out.println("退出service");
+                logger.debug("退出service");
             }
         }
     }

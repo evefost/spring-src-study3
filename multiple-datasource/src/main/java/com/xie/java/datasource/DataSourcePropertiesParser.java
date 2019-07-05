@@ -1,6 +1,5 @@
 package com.xie.java.datasource;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -14,11 +13,17 @@ public class DataSourcePropertiesParser {
 
     private Properties properties;
 
+    private Map<String, DataSourceProperties> masterSlaverProperties;
+
+    private Map<String, DataSourceProperties> datasourceProperties;
+
+    private String defaultDatabaseId;
+
     public DataSourcePropertiesParser(Properties properties){
         this.properties = properties;
     }
 
-    public Map<String,DataSourceProperties> parse() throws IOException {
+    public void parse() {
 
         Map<String,String> masterKey = new HashMap<>();
         Map<String,String> slaverKey = new HashMap<>();
@@ -36,9 +41,9 @@ public class DataSourcePropertiesParser {
             }
         });
         //主从分开属性解释
-        Map<String,DataSourceProperties> masters = new HashMap<>();
+        Map<String, DataSourceProperties> masters = new HashMap<>(masterKey.size());
         processProperties(masterKey,masters);
-        Map<String,DataSourceProperties> slavers = new HashMap<>();
+        Map<String, DataSourceProperties> slavers = new HashMap<>(slaverKey.size());
         processProperties(slaverKey,slavers);
         //整合多套一主多从数据
         masters.forEach((mDataId,mProperites)->{
@@ -48,12 +53,23 @@ public class DataSourcePropertiesParser {
                 }
             });
         });
-       return masters;
-
+        masterSlaverProperties = masters;
+        datasourceProperties = masters;
+        slavers.forEach((k, v) -> {
+            datasourceProperties.put(k, v);
+        });
+        defaultDatabaseId = properties.getProperty("datasource.default.ds-id");
     }
 
+    public Map<String, DataSourceProperties> getMasterSlaverProperties() {
+        return masterSlaverProperties;
+    }
 
-    private void processProperties(Map<String,String> dataSourceKey,Map<String,DataSourceProperties> result){
+    public Map<String, DataSourceProperties> getDatasourceProperties() {
+        return datasourceProperties;
+    }
+
+    private void processProperties(Map<String, String> dataSourceKey, Map<String, DataSourceProperties> result) {
         for(Map.Entry<String,String> entry:dataSourceKey.entrySet()){
             DataSourceProperties dataSourceProperties = new DataSourceProperties();
             String dataPrefix = entry.getValue();
@@ -78,4 +94,7 @@ public class DataSourcePropertiesParser {
         };
     }
 
+    public String getDefaultDatabaseId() {
+        return defaultDatabaseId;
+    }
 }

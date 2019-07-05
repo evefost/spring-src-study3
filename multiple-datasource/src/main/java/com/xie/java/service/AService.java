@@ -12,9 +12,15 @@ import java.util.List;
 public interface AService {
 
 
+  @DatabaseId("s_ds0")
   void save(User user);
 
+  @DatabaseId("s_ds0")
+  void saveWithTransaction(User user);
+
   User queryById(Integer id);
+
+  User queryByIdWithTransaction(Integer id);
 
   List<User> getUsers();
 }

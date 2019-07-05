@@ -1,10 +1,12 @@
 <!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
 <configuration scan="true" scanPeriod="10 seconds">
+
     <Properties>
         <Property name="QZD_LOG_PATH">logs</Property>
         <Property name="QZD_SYS_LOG_LEVEL">info</Property>
         <Property name="QZD_BIZ_LOG_LEVEL">debug</Property>
     </Properties>
+
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -13,9 +15,9 @@
         </encoder>
     </appender>
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>logs/spring-mvc.log</File>
+        <File>logs/multiple-datasource.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/spring-mvc.log-%d{yyyyMMdd}.log.%i</fileNamePattern>
+            <fileNamePattern>logs/multiple-datasource.log-%d{yyyyMMdd}.log.%i</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>1MB</maxFileSize>

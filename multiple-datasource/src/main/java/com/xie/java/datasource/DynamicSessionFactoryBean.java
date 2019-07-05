@@ -96,12 +96,19 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
 
     private ObjectWrapperFactory objectWrapperFactory;
 
+    private MultipleSourceProperties datasourceProperties;
+
+    public void setDatasourceProperties(MultipleSourceProperties datasourceProperties) {
+        this.datasourceProperties = datasourceProperties;
+    }
+
     /**
      * Sets the ObjectFactory.
      *
      * @param objectFactory
      * @since 1.1.2
      */
+    @Override
     public void setObjectFactory(ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
     }
@@ -112,6 +119,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @param objectWrapperFactory
      * @since 1.1.2
      */
+    @Override
     public void setObjectWrapperFactory(ObjectWrapperFactory objectWrapperFactory) {
         this.objectWrapperFactory = objectWrapperFactory;
     }
@@ -122,6 +130,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @return
      * @since 1.1.0
      */
+    @Override
     public DatabaseIdProvider getDatabaseIdProvider() {
         return databaseIdProvider;
     }
@@ -133,22 +142,27 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @param databaseIdProvider
      * @since 1.1.0
      */
+    @Override
     public void setDatabaseIdProvider(DatabaseIdProvider databaseIdProvider) {
         this.databaseIdProvider = databaseIdProvider;
     }
 
+    @Override
     public Class<? extends VFS> getVfs() {
         return this.vfs;
     }
 
+    @Override
     public void setVfs(Class<? extends VFS> vfs) {
         this.vfs = vfs;
     }
 
+    @Override
     public Cache getCache() {
         return this.cache;
     }
 
+    @Override
     public void setCache(Cache cache) {
         this.cache = cache;
     }
@@ -159,6 +173,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @param plugins list of plugins
      * @since 1.0.1
      */
+    @Override
     public void setPlugins(Interceptor[] plugins) {
         this.plugins = plugins;
     }
@@ -169,6 +184,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @param typeAliasesPackage package to scan for domain objects
      * @since 1.0.1
      */
+    @Override
     public void setTypeAliasesPackage(String typeAliasesPackage) {
         this.typeAliasesPackage = typeAliasesPackage;
     }
@@ -180,6 +196,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @param typeAliasesSuperType super class for domain objects
      * @since 1.1.2
      */
+    @Override
     public void setTypeAliasesSuperType(Class<?> typeAliasesSuperType) {
         this.typeAliasesSuperType = typeAliasesSuperType;
     }
@@ -190,6 +207,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @param typeHandlersPackage package to scan for type handlers
      * @since 1.0.1
      */
+    @Override
     public void setTypeHandlersPackage(String typeHandlersPackage) {
         this.typeHandlersPackage = typeHandlersPackage;
     }
@@ -200,6 +218,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @param typeHandlers Type handler list
      * @since 1.0.1
      */
+    @Override
     public void setTypeHandlers(TypeHandler<?>[] typeHandlers) {
         this.typeHandlers = typeHandlers;
     }
@@ -210,6 +229,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @param typeAliases Type aliases list
      * @since 1.0.1
      */
+    @Override
     public void setTypeAliases(Class<?>[] typeAliases) {
         this.typeAliases = typeAliases;
     }
@@ -222,6 +242,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @param failFast enable failFast
      * @since 1.0.1
      */
+    @Override
     public void setFailFast(boolean failFast) {
         this.failFast = failFast;
     }
@@ -230,6 +251,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * Set the location of the MyBatis {@code SqlSessionFactory} config file. A typical value is
      * "WEB-INF/mybatis-configuration.xml".
      */
+    @Override
     public void setConfigLocation(Resource configLocation) {
         this.configLocation = configLocation;
     }
@@ -240,6 +262,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @param configuration MyBatis configuration
      * @since 1.3.0
      */
+    @Override
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
@@ -252,6 +275,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * This property being based on Spring's resource abstraction also allows for specifying
      * resource patterns here: e.g. "classpath*:sqlmap/*-mapper.xml".
      */
+    @Override
     public void setMapperLocations(Resource[] mapperLocations) {
         this.mapperLocations = mapperLocations;
     }
@@ -261,6 +285,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * {@code &lt;properties&gt;} tag in the configuration xml file. This will be used to
      * resolve placeholders in the config file.
      */
+    @Override
     public void setConfigurationProperties(Properties sqlSessionFactoryProperties) {
         this.configurationProperties = sqlSessionFactoryProperties;
     }
@@ -298,6 +323,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * This is mainly meant for testing so that mock SqlSessionFactory classes can be injected. By
      * default, {@code SqlSessionFactoryBuilder} creates {@code DefaultSqlSessionFactory} instances.
      */
+    @Override
     public void setSqlSessionFactoryBuilder(SqlSessionFactoryBuilder sqlSessionFactoryBuilder) {
         this.sqlSessionFactoryBuilder = sqlSessionFactoryBuilder;
     }
@@ -316,6 +342,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * @param transactionFactory the MyBatis TransactionFactory
      * @see SpringManagedTransactionFactory
      */
+    @Override
     public void setTransactionFactory(TransactionFactory transactionFactory) {
         this.transactionFactory = transactionFactory;
     }
@@ -327,6 +354,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      *
      * @param environment the environment name
      */
+    @Override
     public void setEnvironment(String environment) {
         this.environment = environment;
     }
@@ -341,11 +369,9 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
         state((configuration == null && configLocation == null) || !(configuration != null && configLocation != null),
                 "Property 'configuration' and 'configLocation' can not specified with together");
         this.sqlSessionFactory = buildSqlSessionFactory();
-        configuration.addInterceptor(new QueryInterceptor(MultipleDataSource.dataProperties));
-        configuration.addInterceptor(new UpdateInterceptor(MultipleDataSource.dataProperties));
+        configuration.addInterceptor(new QueryInterceptor(datasourceProperties.getMasterSlaverProperties()));
+        configuration.addInterceptor(new UpdateInterceptor(datasourceProperties.getMasterSlaverProperties()));
         processDatabaseIds();
-
-
     }
 
 

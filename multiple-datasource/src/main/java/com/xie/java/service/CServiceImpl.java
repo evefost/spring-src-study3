@@ -4,6 +4,8 @@ import com.xie.java.dao.CMapper;
 import com.xie.java.datasource.TransactionContextHolder;
 import com.xie.java.datasource.annotation.DatabaseId;
 import com.xie.java.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,20 +19,19 @@ import java.util.List;
 @Service
 @DatabaseId("ds2")
 public class CServiceImpl implements CService {
-
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private CMapper userMapper;
 
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void save(User user) {
         if (TransactionContextHolder.hasTransaction()) {
-            System.out.println("BServeceImpl save有事务");
+            logger.info("BServeceImpl save有事务");
         } else {
-            System.out.println("BServeceImpl save无事务");
+            logger.info("BServeceImpl save无事务");
         }
-
     }
 
     @Override

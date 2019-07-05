@@ -10,6 +10,8 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Properties;
@@ -31,6 +33,8 @@ import java.util.Random;
 )})
 public class QueryInterceptor implements Interceptor {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     private Map<String, DataSourceProperties> datasourceProperties;
 
     public QueryInterceptor(Map<String, DataSourceProperties> properties){
@@ -41,17 +45,22 @@ public class QueryInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
+
         MappedStatement ms = (MappedStatement) invocation.getArgs()[0];
 
         String databaseId = ServiceContextHolder.currentDatabaseId();
         DataSourceProperties dsPr = datasourceProperties.get(databaseId);
-        if(dsPr.getSlavers() != null && dsPr.getSlavers().size()>0){
-            //主库查询自动切换成从库
+        logger.debug("查询操作");
+        if (TransactionContextHolder.hasTransaction()) {
+            if (!dsPr.isMaster()) {
+                DataSourceProperties mDs = datasourceProperties.get(dsPr.getParentId());
+                logger.debug("有事务查询操作slaver:{} 切换到 master:{}", dsPr.getId(), mDs.getId());
+            }
+        } else if (dsPr.getSlavers() != null && dsPr.getSlavers().size() > 0) {
             DataSourceProperties slDs = dsPr.getSlavers().get(r.nextInt(dsPr.getSlavers().size()));
             ServiceContextHolder.setCurrentDatabaseId(slDs.getId());
+            logger.debug("无事务查询操作master:{} 切换到 slaver[{}]:{}", dsPr.getId(), dsPr.getSlavers().size(), slDs.getId());
         }
-
-        System.out.println("是否有事务:" + TransactionContextHolder.hasTransaction() + "  bind databaseId:" + ms.getDatabaseId());
         return invocation.proceed();
     }
 

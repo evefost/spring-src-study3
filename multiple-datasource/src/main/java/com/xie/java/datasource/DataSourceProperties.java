@@ -28,6 +28,10 @@ public class DataSourceProperties {
      */
     private boolean isDefault;
 
+    public boolean isMaster() {
+        return parentId == null;
+    }
+
 
     /**
      *如果主从可能有从库

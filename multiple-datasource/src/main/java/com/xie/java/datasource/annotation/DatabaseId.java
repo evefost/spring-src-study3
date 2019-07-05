@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * Created by xieyang on 19/6/22.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Documented
 public @interface DatabaseId {
     String value();

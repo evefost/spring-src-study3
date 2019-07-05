@@ -1,22 +1,16 @@
 package com.xie.java.datasource;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.PropertiesPropertySource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -25,20 +19,24 @@ import java.util.Properties;
  * @date 19/6/21
  */
 public class MultipleDataSource extends AbstractDataSource implements InitializingBean,EnvironmentAware {
-
+    public final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Map<String, DataSource> dataSources;
+
+    private MultipleSourceProperties sourceProperties;
+
 
     private Properties properties;
 
     private ConfigurableEnvironment environment;
 
-    private String defaultDatabaseId;
-
-    public String getDefaultDatabaseId() {
-        return defaultDatabaseId;
+    public void setDataSources(Map<String, DataSource> dataSources) {
+        this.dataSources = dataSources;
     }
 
+    public void setSourceProperties(MultipleSourceProperties sourceProperties) {
+        this.sourceProperties = sourceProperties;
+    }
 
     @Override
     public void setEnvironment(Environment environment) {
@@ -50,9 +48,15 @@ public class MultipleDataSource extends AbstractDataSource implements Initializi
     public Connection getConnection() throws SQLException {
         String databaseId = ServiceContextHolder.currentDatabaseId();
         if (databaseId == null) {
-            databaseId = defaultDatabaseId;
+            databaseId = sourceProperties.getDefaultDatabaseId();
         }
-        System.out.println("当前先择的数据库:" + databaseId);
+        DataSourceProperties dsProperties = sourceProperties.getProperties(databaseId);
+        if (TransactionContextHolder.hasTransaction() && !dsProperties.isMaster()) {
+            logger.warn("有事务，强制从库[{}]切换到主库[{}]", dsProperties.getId(), dsProperties.getParentId());
+            databaseId = dsProperties.getParentId();
+            dsProperties = sourceProperties.getProperties(databaseId);
+        }
+        logger.debug("当前选择{}[{}][{}]", dsProperties.isMaster() ? "主库" : "从库", databaseId, dsProperties.getUrl());
         return dataSources.get(databaseId).getConnection();
     }
 
@@ -61,56 +65,16 @@ public class MultipleDataSource extends AbstractDataSource implements Initializi
         throw new UnsupportedOperationException("Not supported by MultipleDataSource");
     }
 
-    public  static Map<String, DataSourceProperties> dataProperties;
+
 
     @Override
     public void afterPropertiesSet() throws Exception {
 
-        doLoadloadProperties();
-        DataSourcePropertiesParser dataSourcePropertiesParser = new DataSourcePropertiesParser(properties);
-        dataProperties = dataSourcePropertiesParser.parse();
-        defaultDatabaseId = properties.getProperty("datasource.default.ds-id");
-        dataSources = new HashMap<>(dataProperties.size());
-        for (Map.Entry<String, DataSourceProperties> entry : dataProperties.entrySet()) {
-            String dataId = entry.getKey();
-            DataSourceProperties value = entry.getValue();
-            DataSource dataSource = createDataSource(value);
-            if (value.getSlavers().isEmpty()) {
-                dataSources.put(dataId, dataSource);
-            } else {
-                DynamicCompositDataSource masterDataSource = new DynamicCompositDataSource();
-                masterDataSource.setMaster(dataSource);
-                List<DataSourceProperties> slavers = value.getSlavers();
-                for (DataSourceProperties slaverProperties : slavers) {
-                    DataSource slaverDataSource = createDataSource(slaverProperties);
-                    masterDataSource.addSlaver(slaverProperties.getId(), slaverDataSource);
-                    dataSources.put(slaverProperties.getId(), slaverDataSource);
-                }
-                dataSources.put(dataId, masterDataSource);
-            }
-
-        }
-    }
-
-    private DataSource createDataSource(DataSourceProperties properties) {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl(properties.getUrl());
-        dataSource.setUsername(properties.getUsername());
-        dataSource.setPassword(properties.getPassword());
-        return dataSource;
-
     }
 
 
-    private void doLoadloadProperties() throws IOException {
-        Resource path = new ClassPathResource("application.properties");
-        properties = PropertiesLoaderUtils.loadProperties(path);
-        PropertiesPropertySource mapPropertySource = new PropertiesPropertySource("myproperties", properties);
-        ConfigurableEnvironment env = environment;
-        env.getPropertySources().addLast(mapPropertySource);
 
-    }
+
 
 
 }
