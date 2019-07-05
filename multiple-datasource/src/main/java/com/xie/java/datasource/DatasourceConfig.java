@@ -165,8 +165,7 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
             }
         }
 
-        TransactionContextHolder.methodDatabaseMapping = methodMappingMap;
-        ServiceContextHolder.methodDatabaseMapping = methodMappingMap;
+        RouteContextManager.setMethodDatabaseMapping(methodMappingMap);
     }
 
 

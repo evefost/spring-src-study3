@@ -1,7 +1,7 @@
 package com.xie.java.service;
 
 import com.xie.java.dao.BMapper;
-import com.xie.java.datasource.TransactionContextHolder;
+import com.xie.java.datasource.RouteContextManager;
 import com.xie.java.datasource.annotation.DatabaseId;
 import com.xie.java.entity.User;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class BServiceImpl implements BService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(User user) {
-        if (TransactionContextHolder.hasTransaction()) {
+        if (RouteContextManager.hasTransaction()) {
             logger.info("BServeceImpl save有事务");
         } else {
             logger.info("BServeceImpl save无事务");

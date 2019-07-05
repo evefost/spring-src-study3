@@ -46,12 +46,12 @@ public class MultipleDataSource extends AbstractDataSource implements Initializi
 
     @Override
     public Connection getConnection() throws SQLException {
-        String databaseId = ServiceContextHolder.currentDatabaseId();
+        String databaseId = RouteContextManager.currentDatabaseId();
         if (databaseId == null) {
             databaseId = sourceProperties.getDefaultDatabaseId();
         }
         DataSourceProperties dsProperties = sourceProperties.getProperties(databaseId);
-        if (TransactionContextHolder.hasTransaction() && !dsProperties.isMaster()) {
+        if (RouteContextManager.hasTransaction() && !dsProperties.isMaster()) {
             logger.warn("有事务，强制从库[{}]切换到主库[{}]", dsProperties.getId(), dsProperties.getParentId());
             databaseId = dsProperties.getParentId();
             dsProperties = sourceProperties.getProperties(databaseId);

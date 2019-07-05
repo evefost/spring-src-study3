@@ -1,7 +1,7 @@
 package com.xie.java.datasource.interceptor;
 
 import com.xie.java.datasource.DataSourceProperties;
-import com.xie.java.datasource.ServiceContextHolder;
+import com.xie.java.datasource.RouteContextManager;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
@@ -31,10 +31,10 @@ public class UpdateInterceptor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         logger.debug("更新操作");
         MappedStatement ms = (MappedStatement) invocation.getArgs()[0];
-        DataSourceProperties dsPr = datasourceProperties.get(ServiceContextHolder.currentDatabaseId());
+        DataSourceProperties dsPr = datasourceProperties.get(RouteContextManager.currentDatabaseId());
         if (!dsPr.isMaster()) {
             logger.warn("更新操作强制从库[{}]切换到主库[{}]", dsPr.getId(), dsPr.getParentId());
-            ServiceContextHolder.setCurrentDatabaseId(dsPr.getParentId());
+            RouteContextManager.setCurrentDatabaseId(dsPr.getParentId(),RouteContextManager.hasTransaction());
         }
         return invocation.proceed();
     }

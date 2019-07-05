@@ -1,6 +1,6 @@
 package com.xie.java.datasource;
 
-public class TransactionCounter {
+public class InterceptorCounter {
 
     private volatile int counter;
 

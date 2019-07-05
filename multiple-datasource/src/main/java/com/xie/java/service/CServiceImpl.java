@@ -1,7 +1,7 @@
 package com.xie.java.service;
 
 import com.xie.java.dao.CMapper;
-import com.xie.java.datasource.TransactionContextHolder;
+import com.xie.java.datasource.RouteContextManager;
 import com.xie.java.datasource.annotation.DatabaseId;
 import com.xie.java.entity.User;
 import org.slf4j.Logger;
@@ -19,7 +19,9 @@ import java.util.List;
 @Service
 @DatabaseId("ds2")
 public class CServiceImpl implements CService {
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private CMapper userMapper;
 
@@ -27,7 +29,7 @@ public class CServiceImpl implements CService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(User user) {
-        if (TransactionContextHolder.hasTransaction()) {
+        if (RouteContextManager.hasTransaction()) {
             logger.info("BServeceImpl save有事务");
         } else {
             logger.info("BServeceImpl save无事务");

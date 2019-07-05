@@ -64,4 +64,6 @@ public class ServiceDatabaseProcessor implements BeanPostProcessor, BeanFactoryA
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         registry= (BeanDefinitionRegistry) beanFactory;
     }
+
+
 }

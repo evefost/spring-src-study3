@@ -1,8 +1,7 @@
 package com.xie.java.datasource.interceptor;
 
 import com.xie.java.datasource.DataSourceProperties;
-import com.xie.java.datasource.ServiceContextHolder;
-import com.xie.java.datasource.TransactionContextHolder;
+import com.xie.java.datasource.RouteContextManager;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -45,20 +44,18 @@ public class QueryInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-
-        MappedStatement ms = (MappedStatement) invocation.getArgs()[0];
-
-        String databaseId = ServiceContextHolder.currentDatabaseId();
-        DataSourceProperties dsPr = datasourceProperties.get(databaseId);
         logger.debug("查询操作");
-        if (TransactionContextHolder.hasTransaction()) {
+        MappedStatement ms = (MappedStatement) invocation.getArgs()[0];
+        String databaseId = RouteContextManager.currentDatabaseId();
+        DataSourceProperties dsPr = datasourceProperties.get(databaseId);
+        if (RouteContextManager.hasTransaction()) {
             if (!dsPr.isMaster()) {
                 DataSourceProperties mDs = datasourceProperties.get(dsPr.getParentId());
                 logger.debug("有事务查询操作slaver:{} 切换到 master:{}", dsPr.getId(), mDs.getId());
             }
         } else if (dsPr.getSlavers() != null && dsPr.getSlavers().size() > 0) {
             DataSourceProperties slDs = dsPr.getSlavers().get(r.nextInt(dsPr.getSlavers().size()));
-            ServiceContextHolder.setCurrentDatabaseId(slDs.getId());
+            RouteContextManager.setCurrentDatabaseId(slDs.getId(),false);
             logger.debug("无事务查询操作master:{} 切换到 slaver[{}]:{}", dsPr.getId(), dsPr.getSlavers().size(), slDs.getId());
         }
         return invocation.proceed();
