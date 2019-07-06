@@ -1,10 +1,11 @@
 package com.xie.java.datasource;
 
+import org.apache.ibatis.mapping.MappedStatement;
+
 import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- *
  * @author xieyang
  * @date 19/6/27
  */
@@ -18,48 +19,67 @@ public class RouteContextManager {
 
     private static ContextHolder transactionContextHolder = new ContextHolder();
 
+    private static ThreadLocal<MappedStatement> currentMapStatement = ThreadLocal.withInitial(() -> null);
+
+
+    public static void setMapStatement(MappedStatement statement) {
+        currentMapStatement.set(statement);
+    }
+
+    public static void removeMapStatement() {
+        currentMapStatement.remove();
+    }
+
+
+    public static MappedStatement getMapStatement() {
+        return currentMapStatement.get();
+    }
+
 
     public static int increase(boolean transaction) {
-        if(transaction){
+        if (transaction) {
             return transactionContextHolder.increase();
-        }else {
+        } else {
             return serviceContextHolder.increase();
         }
 
     }
 
     public static int decrease(boolean transaction) {
-        if(transaction){
+        if (transaction) {
             return transactionContextHolder.decrease();
-        }else {
+        } else {
             return serviceContextHolder.decrease();
         }
     }
 
 
-    public static void setCurrentDatabaseId(String databaseId,boolean transaction){
-        if(transaction){
+    public static void setCurrentDatabaseId(String databaseId, boolean transaction) {
+        if (transaction) {
             transactionContextHolder.setCurrentDatabaseId(databaseId);
-        }else {
+        } else {
             serviceContextHolder.setCurrentDatabaseId(databaseId);
         }
     }
 
-    public static String getDatabaseId(Method method){
+    public static String getDatabaseId(Method method) {
         DatasourceConfig.MethodMapping methodMapping = methodDatabaseMapping.get(method);
-        if(methodMapping== null){
+        if (methodMapping == null) {
             return null;
         }
         return methodMapping.getDatabaseId();
     }
 
 
-    public static void setMethodDatabaseMapping(Map<Method, DatasourceConfig.MethodMapping> mapping){
+    public static void setMethodDatabaseMapping(Map<Method, DatasourceConfig.MethodMapping> mapping) {
         methodDatabaseMapping = mapping;
     }
 
     public static String currentDatabaseId() {
-      return   serviceContextHolder.currentDatabaseId();
+        if (hasTransaction()) {
+            return transactionContextHolder.currentDatabaseId();
+        }
+        return serviceContextHolder.currentDatabaseId();
     }
 
     public static boolean hasTransaction() {

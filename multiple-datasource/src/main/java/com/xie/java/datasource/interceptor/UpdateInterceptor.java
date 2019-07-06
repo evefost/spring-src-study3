@@ -8,6 +8,7 @@ import org.apache.ibatis.plugin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.util.Map;
 import java.util.Properties;
 
@@ -22,11 +23,14 @@ import java.util.Properties;
         args = {MappedStatement.class, Object.class})})
 public class UpdateInterceptor implements Interceptor {
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private DataSource dataSource;
     private Map<String, DataSourceProperties> datasourceProperties;
 
-    public UpdateInterceptor(Map<String, DataSourceProperties> properties){
+    public UpdateInterceptor(DataSource dataSource,Map<String, DataSourceProperties> properties){
+        this.dataSource = dataSource;
         this.datasourceProperties = properties;
     }
+
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         logger.debug("更新操作");

@@ -50,4 +50,29 @@ public class TestServiceDatabase {
         aService.save(user);
         logger.debug("{}", user);
     }
+
+
+    /**
+     * 单简mapStatement 绑定数据源 查询测试
+     */
+    @Test
+    public void testMapStatmentBindDatasource() {
+        String[] configurLocations = {"spring-beans.xml"};
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations);
+        AService aService = context.getBean(AService.class);
+        User user = aService.queryById(2);
+        logger.debug("{}", user);
+    }
+
+    /**
+     * 单简mapStatement 绑定数据源 查询测试
+     */
+    @Test
+    public void testMapStatmentBindDatasourceWithTransaction() {
+        String[] configurLocations = {"spring-beans.xml"};
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations);
+        AService aService = context.getBean(AService.class);
+        User user = aService.queryByIdWithTransaction(2);
+        logger.debug("{}", user);
+    }
 }

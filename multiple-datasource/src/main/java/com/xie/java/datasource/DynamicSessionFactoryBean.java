@@ -369,8 +369,8 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
         state((configuration == null && configLocation == null) || !(configuration != null && configLocation != null),
                 "Property 'configuration' and 'configLocation' can not specified with together");
         this.sqlSessionFactory = buildSqlSessionFactory();
-        configuration.addInterceptor(new QueryInterceptor(datasourceProperties.getMasterSlaverProperties()));
-        configuration.addInterceptor(new UpdateInterceptor(datasourceProperties.getMasterSlaverProperties()));
+        configuration.addInterceptor(new QueryInterceptor(dataSource,datasourceProperties.getMasterSlaverProperties()));
+        configuration.addInterceptor(new UpdateInterceptor(dataSource,datasourceProperties.getMasterSlaverProperties()));
         processDatabaseIds();
     }
 

@@ -27,7 +27,6 @@ public class AServiceImpl implements AService {
    * @param user
    */
   @Override
-
   @DatabaseId("s_ds0")
   public void save(User user) {
     userMapper.insertUser(user);

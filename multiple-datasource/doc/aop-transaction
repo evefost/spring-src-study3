@@ -6,3 +6,7 @@ postProcessAfterInitialization
 wrapIfNecessary
 //Create proxy if we have advice.
 SpringTransactionAnnotationParser
+
+
+RoutingStatementHandler
+

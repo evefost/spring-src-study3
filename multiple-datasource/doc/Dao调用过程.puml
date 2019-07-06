@@ -13,5 +13,7 @@ DefaultSqlSession->CachingExecutor: executor增删改查操作
 SimpleExecutor->SimpleExecutor:prepareStatement(handler,statementLog) 在这里会获取数据库连接,创建Statement
 SimpleExecutor->SpringManagedTransaction:getConnection() 内部维护datasource
 SimpleExecutor->RoutingStatementHandler: 增删改查操作
+RoutingStatementHandler->PreparedStatementHandler:prepare() 开始创建Statement
+PreparedStatementHandler->PreparedStatementHandler:instantiateStatement() 利用connection 生成Statement
 
 @enduml

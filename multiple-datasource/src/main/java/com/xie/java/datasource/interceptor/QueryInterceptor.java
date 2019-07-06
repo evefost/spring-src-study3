@@ -1,9 +1,11 @@
 package com.xie.java.datasource.interceptor;
 
 import com.xie.java.datasource.DataSourceProperties;
+import com.xie.java.datasource.DynamicRoutingStatementHandler;
 import com.xie.java.datasource.RouteContextManager;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
@@ -12,6 +14,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
@@ -34,9 +37,12 @@ public class QueryInterceptor implements Interceptor {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private DataSource dataSource;
+
     private Map<String, DataSourceProperties> datasourceProperties;
 
-    public QueryInterceptor(Map<String, DataSourceProperties> properties){
+    public QueryInterceptor(DataSource dataSource, Map<String, DataSourceProperties> properties) {
+        this.dataSource = dataSource;
         this.datasourceProperties = properties;
     }
 
@@ -44,8 +50,8 @@ public class QueryInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        logger.debug("查询操作");
         MappedStatement ms = (MappedStatement) invocation.getArgs()[0];
+        RouteContextManager.setMapStatement(ms);
         String databaseId = RouteContextManager.currentDatabaseId();
         DataSourceProperties dsPr = datasourceProperties.get(databaseId);
         if (RouteContextManager.hasTransaction()) {
@@ -58,11 +64,20 @@ public class QueryInterceptor implements Interceptor {
             RouteContextManager.setCurrentDatabaseId(slDs.getId(),false);
             logger.debug("无事务查询操作master:{} 切换到 slaver[{}]:{}", dsPr.getId(), dsPr.getSlavers().size(), slDs.getId());
         }
-        return invocation.proceed();
+        RouteContextManager.setCurrentDatabaseId("ds1",true);
+        try {
+            return invocation.proceed();
+        }finally {
+            RouteContextManager.removeMapStatement();
+            //TransactionSynchronizationManager.bindResource(this.dataSource,txObject);
+        }
     }
 
     @Override
     public Object plugin(Object target) {
+        if (target instanceof RoutingStatementHandler) {
+            target = new DynamicRoutingStatementHandler((RoutingStatementHandler) target);
+        }
         return Plugin.wrap(target, this);
     }
 

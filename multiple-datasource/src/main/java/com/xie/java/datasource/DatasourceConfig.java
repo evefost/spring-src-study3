@@ -175,10 +175,11 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
         for (Method m : methods) {
             MethodMapping methodMapping = new MethodMapping();
             if (m.isAnnotationPresent(DatabaseId.class)) {
-                databaseId = m.getAnnotation(DatabaseId.class).value();
+                methodMapping.setDatabaseId(m.getAnnotation(DatabaseId.class).value());
+            }else {
+                methodMapping.setDatabaseId(databaseId);
             }
-            checkDatabaseExist(databaseId, clz, m);
-            methodMapping.setDatabaseId(databaseId);
+            checkDatabaseExist(methodMapping.getDatabaseId(), clz, m);
             methodMapping.setMethod(m);
             methodMappingMap.put(m, methodMapping);
         }

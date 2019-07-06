@@ -36,6 +36,7 @@ public  class ServiceInterceptor implements InvocationHandler {
                 logger.debug("进入service ");
             }
             String databaseId = RouteContextManager.getDatabaseId(method);
+            logger.debug("service bind databaseId[{}]",databaseId);
             RouteContextManager.setCurrentDatabaseId(databaseId,transaction);
             try {
                 return method.invoke(target,args);
