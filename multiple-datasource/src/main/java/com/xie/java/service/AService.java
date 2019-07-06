@@ -8,14 +8,12 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/3/2.
  */
-@DatabaseId("ds0")
+@DatabaseId("ds0_1")
 public interface AService {
 
 
-  @DatabaseId("s_ds0")
   void save(User user);
 
-  @DatabaseId("s_ds0")
   void saveWithTransaction(User user);
 
   User queryById(Integer id);

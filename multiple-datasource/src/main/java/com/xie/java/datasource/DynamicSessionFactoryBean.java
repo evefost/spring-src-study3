@@ -1,8 +1,7 @@
 package com.xie.java.datasource;
 
 import com.xie.java.datasource.annotation.DatabaseId;
-import com.xie.java.datasource.interceptor.QueryInterceptor;
-import com.xie.java.datasource.interceptor.UpdateInterceptor;
+import com.xie.java.datasource.interceptor.ExecutorInterceptor;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.cache.Cache;
@@ -369,8 +368,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
         state((configuration == null && configLocation == null) || !(configuration != null && configLocation != null),
                 "Property 'configuration' and 'configLocation' can not specified with together");
         this.sqlSessionFactory = buildSqlSessionFactory();
-        configuration.addInterceptor(new QueryInterceptor(dataSource,datasourceProperties.getMasterSlaverProperties()));
-        configuration.addInterceptor(new UpdateInterceptor(dataSource,datasourceProperties.getMasterSlaverProperties()));
+        configuration.addInterceptor(new ExecutorInterceptor(dataSource,datasourceProperties.getMasterSlaverProperties()));
         processDatabaseIds();
     }
 

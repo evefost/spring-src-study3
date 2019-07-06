@@ -19,7 +19,6 @@ import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.ResultHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,16 +58,16 @@ public class DynamicRoutingStatementHandler implements StatementHandler {
   @Override
   public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
 
-    String currentDatabaseId = RouteContextManager.currentDatabaseId();
-    String url = connection.getMetaData().getURL();
-    logger.info("改写数据源前:[{}][{}]",currentDatabaseId,url);
-    MappedStatement mapStatement = RouteContextManager.getMapStatement();
-    String bindDatabaseId = mapStatement.getDatabaseId();
-    if(currentDatabaseId.equals(bindDatabaseId)){
-
-    }else {
-      logger.info("statement 绑定的数据源[{}]与当前源[{}]不一致，切换据源",bindDatabaseId,currentDatabaseId,url);
-    }
+//    String currentDatabaseId = RouteContextManager.currentDatabaseId();
+//    String url = connection.getMetaData().getURL();
+//    logger.info("改写数据源前:[{}][{}]",currentDatabaseId,url);
+//    MappedStatement mapStatement = RouteContextManager.getMapStatement();
+//    String bindDatabaseId = mapStatement.getDatabaseId();
+//    if(currentDatabaseId.equals(bindDatabaseId)){
+//
+//    }else {
+//      logger.info("statement 绑定的数据源[{}]与当前源[{}]不一致，切换据源",bindDatabaseId,currentDatabaseId,url);
+//    }
 
     return delegate.prepare(connection, transactionTimeout);
   }

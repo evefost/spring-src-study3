@@ -30,13 +30,15 @@ public  class ServiceInterceptor implements InvocationHandler {
             }
 
             boolean transaction = false;
-
             int increase =  RouteContextManager.increase(transaction);
             if(increase == 1){
                 logger.debug("进入service ");
             }
             String databaseId = RouteContextManager.getDatabaseId(method);
             logger.debug("service bind databaseId[{}]",databaseId);
+            if(databaseId == null){
+                databaseId = RouteContextManager.getDefaultDatabaseId();
+            }
             RouteContextManager.setCurrentDatabaseId(databaseId,transaction);
             try {
                 return method.invoke(target,args);

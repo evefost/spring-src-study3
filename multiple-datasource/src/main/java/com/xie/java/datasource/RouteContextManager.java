@@ -3,7 +3,9 @@ package com.xie.java.datasource;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author xieyang
@@ -21,6 +23,11 @@ public class RouteContextManager {
 
     private static ThreadLocal<MappedStatement> currentMapStatement = ThreadLocal.withInitial(() -> null);
 
+    private static MultipleSourceProperties multipleSourceProperties;
+
+    public static void setMultipleSourceProperties(MultipleSourceProperties multipleSourceProperties) {
+        RouteContextManager.multipleSourceProperties = multipleSourceProperties;
+    }
 
     public static void setMapStatement(MappedStatement statement) {
         currentMapStatement.set(statement);
@@ -84,6 +91,35 @@ public class RouteContextManager {
 
     public static boolean hasTransaction() {
         return transactionContextHolder.counterValue() != 0;
+    }
+
+
+    public static boolean isMaster(String databaseId) {
+        DataSourceProperties dataSourceProperties = multipleSourceProperties.getDatasourceProperties().get(databaseId);
+        return dataSourceProperties.getParentId() == null;
+    }
+
+    public static String getMasterId(String slaverId) {
+        DataSourceProperties dataSourceProperties = multipleSourceProperties.getDatasourceProperties().get(slaverId);
+        return dataSourceProperties.getParentId();
+    }
+
+    private static Random r = new Random();
+
+    public static String getSlaverId(String masterId) {
+        DataSourceProperties dataSourceProperties = multipleSourceProperties.getDatasourceProperties().get(masterId);
+        List<DataSourceProperties> slavers = dataSourceProperties.getSlavers();
+        if (slavers.isEmpty()) {
+            return null;
+        }
+        if (slavers.size() == 1) {
+            return slavers.get(0).getId();
+        }
+        return slavers.get(r.nextInt(slavers.size())).getId();
+    }
+
+    public static String getDefaultDatabaseId() {
+        return multipleSourceProperties.getDefaultDatabaseId();
     }
 
 }

@@ -1,7 +1,6 @@
 package com.xie.java.service;
 
 import com.xie.java.dao.AMapper;
-import com.xie.java.datasource.annotation.DatabaseId;
 import com.xie.java.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ public class AServiceImpl implements AService {
    * @param user
    */
   @Override
-  @DatabaseId("s_ds0")
   public void save(User user) {
     userMapper.insertUser(user);
   }

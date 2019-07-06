@@ -6,12 +6,14 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.aop.framework.adapter.AdvisorAdapterRegistry;
 import org.springframework.aop.framework.adapter.GlobalAdvisorAdapterRegistry;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.Ordered;
@@ -23,6 +25,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -39,6 +42,8 @@ import java.util.Properties;
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, BeanClassLoaderAware, InitializingBean, EnvironmentAware {
+
+    public static  final String TRANSACTION_MANAGER_PREFIX = "transactionManager_";
 
     private BeanDefinitionRegistry registry;
 
@@ -91,6 +96,7 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
     public void afterPropertiesSet() throws Exception {
         findDatabaseId();
         initDatasource();
+        registryPlatformTransactionManager();
     }
 
     private void initDatasource() {
@@ -138,6 +144,7 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
         sourceProperties.setDatasourceProperties(dataSourcePropertiesParser.getDatasourceProperties());
         sourceProperties.setMasterSlaverProperties(dataSourcePropertiesParser.getMasterSlaverProperties());
         sourceProperties.setDefaultDatabaseId(dataSourcePropertiesParser.getDefaultDatabaseId());
+        RouteContextManager.setMultipleSourceProperties(sourceProperties);
     }
 
     private void findDatabaseId() throws ClassNotFoundException {
@@ -169,6 +176,22 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
     }
 
 
+    private void registryPlatformTransactionManager() {
+
+        Map<String, DataSourceProperties> masterSlaverProperties = sourceProperties.getMasterSlaverProperties();
+
+        masterSlaverProperties.forEach((databaseId, properties) -> {
+            GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+            beanDefinition.setBeanClass(DataSourceTransactionManager.class);
+            MutablePropertyValues propertyValues = new MutablePropertyValues();
+            propertyValues.add("dataSource",dataSource.getDatasource(databaseId));
+            beanDefinition.setPropertyValues(propertyValues);
+            registry.registerBeanDefinition(TRANSACTION_MANAGER_PREFIX + databaseId, beanDefinition);
+        });
+
+    }
+
+
     private void parseMethodDatabaseId(DatabaseId annotation, Class<?> clz, Map<Method, MethodMapping> methodMappingMap) {
         String databaseId = annotation.value();
         Method[] methods = clz.getDeclaredMethods();
@@ -176,7 +199,7 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
             MethodMapping methodMapping = new MethodMapping();
             if (m.isAnnotationPresent(DatabaseId.class)) {
                 methodMapping.setDatabaseId(m.getAnnotation(DatabaseId.class).value());
-            }else {
+            } else {
                 methodMapping.setDatabaseId(databaseId);
             }
             checkDatabaseExist(methodMapping.getDatabaseId(), clz, m);
