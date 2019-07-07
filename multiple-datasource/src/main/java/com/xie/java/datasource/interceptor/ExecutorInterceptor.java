@@ -74,8 +74,8 @@ public class ExecutorInterceptor implements Interceptor {
         String currentId = databaseId;
         if(bindId != null){
             currentId = bindId;
-            logger.debug(" mapstatement bind [{}]",bindId);
         }
+        logger.debug(" {} bind databaseId [{}]",ms.getId(),bindId);
 
         String masterId =  null;
         if(RouteContextManager.isMaster(currentId)){
@@ -85,18 +85,25 @@ public class ExecutorInterceptor implements Interceptor {
             masterId =  RouteContextManager.getMasterId(currentId);
         }
         String slaverId = RouteContextManager.getSlaverId(masterId);
-
+        boolean isSelect  =  SqlCommandType.SELECT.equals(ms.getSqlCommandType());
         if(RouteContextManager.hasTransaction()){
             RouteContextManager.setCurrentDatabaseId(masterId,true);
         }else {
-            if(SqlCommandType.SELECT.equals(ms.getSqlCommandType())){
-                //todo
+            if(!RouteContextManager.hadUpdateBefore() && isSelect){
+                //查询操作且之前没有过更新操作
                 RouteContextManager.setCurrentDatabaseId(slaverId,false);
             }else {
                 RouteContextManager.setCurrentDatabaseId(masterId,false);
+                if(isSelect){
+                    logger.debug("无事务查询操作，之前有过修改小操作,切换到主库:[{}]",masterId);
+                }
             }
         }
-        logger.info("[{}]当前应选数据源[{}]",ms.getSqlCommandType(), RouteContextManager.currentDatabaseId());
+        boolean master = RouteContextManager.isMaster(RouteContextManager.currentDatabaseId());
+        if(!isSelect){
+            RouteContextManager.markUpdateOperateFlag();
+        }
+        logger.info("[{}]当前应选数据源[{}]({})",ms.getSqlCommandType(), RouteContextManager.currentDatabaseId(),master?"主库":"从库");
     }
 
     @Override

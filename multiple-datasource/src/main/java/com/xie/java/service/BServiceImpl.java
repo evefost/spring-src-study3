@@ -1,7 +1,6 @@
 package com.xie.java.service;
 
 import com.xie.java.dao.BMapper;
-import com.xie.java.datasource.RouteContextManager;
 import com.xie.java.datasource.annotation.DatabaseId;
 import com.xie.java.entity.User;
 import org.slf4j.Logger;
@@ -21,28 +20,24 @@ import java.util.List;
 public class BServiceImpl implements BService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
-    private BMapper userMapper;
+    private BMapper bMapper;
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(User user) {
-        if (RouteContextManager.hasTransaction()) {
-            logger.info("BServeceImpl save有事务");
-        } else {
-            logger.info("BServeceImpl save无事务");
-        }
+        bMapper.insertUser(user);
 
     }
 
     @Override
     public User queryById(Integer id) {
-        return userMapper.queryById(id);
+        return bMapper.queryById(id);
     }
 
 
     @Override
     public List<User> getUsers() {
-        return userMapper.listUser();
+        return bMapper.listUser();
     }
 }

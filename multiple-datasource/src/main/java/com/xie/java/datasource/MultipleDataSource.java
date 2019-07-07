@@ -52,7 +52,8 @@ public class MultipleDataSource extends AbstractDataSource implements Initializi
     public Connection getConnection() throws SQLException {
         String databaseId = RouteContextManager.currentDatabaseId();
         DataSourceProperties dsProperties = sourceProperties.getProperties(databaseId);
-        logger.debug("实际操作的库{}[{}][{}]", dsProperties.isMaster() ? "主库" : "从库", databaseId, dsProperties.getUrl());
+        boolean trans = RouteContextManager.hasTransaction();
+        logger.debug("获取[{}][{}][{}]({})",dsProperties.isMaster() ? "主库" : "从库", databaseId, dsProperties.getUrl(),trans?"有事务":"无事务");
         return dataSources.get(databaseId).getConnection();
     }
 

@@ -4,11 +4,7 @@ import com.xie.java.datasource.RouteContextManager;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.interceptor.TransactionAttribute;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
-
-import static com.xie.java.datasource.DatasourceConfig.TRANSACTION_MANAGER_PREFIX;
 
 /**
  *
@@ -26,6 +22,9 @@ public class PreTransactionInterceptor extends TransactionInterceptor {
             logger.debug("进入事务拦截器");
         }
         String databaseId = RouteContextManager.getDatabaseId(invocation.getMethod());
+        if(databaseId == null){
+            databaseId = RouteContextManager.getDefaultDatabaseId();
+        }
         boolean master = RouteContextManager.isMaster(databaseId);
         if(master){
             RouteContextManager.setCurrentDatabaseId(databaseId,transaction);
@@ -47,13 +46,13 @@ public class PreTransactionInterceptor extends TransactionInterceptor {
         }
     }
 
-    @Override
-    protected PlatformTransactionManager determineTransactionManager(TransactionAttribute txAttr) {
-        String manangerName =TRANSACTION_MANAGER_PREFIX+RouteContextManager.currentDatabaseId();
-        Object bean = getBeanFactory().getBean(manangerName);
-        if(bean != null){
-            return (PlatformTransactionManager) bean;
-        }
-        return  super.determineTransactionManager(txAttr);
-    }
+//    @Override
+//    protected PlatformTransactionManager determineTransactionManager(TransactionAttribute txAttr) {
+//        String manangerName =TRANSACTION_MANAGER_PREFIX+RouteContextManager.currentDatabaseId();
+//        Object bean = getBeanFactory().getBean(manangerName);
+//        if(bean != null){
+//            return (PlatformTransactionManager) bean;
+//        }
+//        return  super.determineTransactionManager(txAttr);
+//    }
 }

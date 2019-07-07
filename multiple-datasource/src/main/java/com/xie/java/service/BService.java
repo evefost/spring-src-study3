@@ -1,6 +1,7 @@
 package com.xie.java.service;
 
 import com.xie.java.entity.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
 public interface BService {
 
 
+    @Transactional
     void save(User user);
     User queryById(Integer id);
 

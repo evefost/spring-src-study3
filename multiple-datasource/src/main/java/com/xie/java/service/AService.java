@@ -2,6 +2,7 @@ package com.xie.java.service;
 
 import com.xie.java.datasource.annotation.DatabaseId;
 import com.xie.java.entity.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -11,14 +12,33 @@ import java.util.List;
 @DatabaseId("ds0_1")
 public interface AService {
 
-
-  void save(User user);
-
-  void saveWithTransaction(User user);
-
+//  @Transactional
   User queryById(Integer id);
 
   User queryByIdWithTransaction(Integer id);
 
+  @Transactional
+  void save(User user);
+
+  void saveWithTransaction(User user);
+
   List<User> getUsers();
+
+
+
+
+  void queryByIdMutipleDao(Integer id);
+
+
+
+  @Transactional
+  void saveMutipleDao(User user);
+
+
+  @Transactional
+  void mutipleOperate();
+
+
+  @Transactional
+  void mutipleOperate2();
 }

@@ -12,7 +12,7 @@ public class TestServiceSimple {
     public final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
-    public void testQuery(){
+    public void testDefaultQuery(){
         String[]  configurLocations = {"spring-beans.xml"};
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations) ;
         AService aService = context.getBean(AService.class);
@@ -21,7 +21,7 @@ public class TestServiceSimple {
     }
 
     @Test
-    public void testUpdate() {
+    public void testDefaultUpdate() {
         String[] configurLocations = {"spring-beans.xml"};
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations);
         AService aService = context.getBean(AService.class);
@@ -32,40 +32,49 @@ public class TestServiceSimple {
         logger.debug("{}", user);
     }
 
+
     @Test
-    public void testQueryWithTransaction() {
-        String[] configurLocations = {"spring-beans.xml"};
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations);
+    public void testMutipleDaoQuery(){
+        String[]  configurLocations = {"spring-beans.xml"};
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations) ;
         AService aService = context.getBean(AService.class);
-        User user = aService.queryByIdWithTransaction(2);
-        logger.debug("{}", user);
+        aService.queryByIdMutipleDao(2);
+
     }
 
 
 
-
-    /**
-     * 单简mapStatement 绑定数据源 查询测试
-     */
     @Test
-    public void testMapStatmentBindDatasource() {
+    public void testMutipleDaoUpdate(){
+        String[]  configurLocations = {"spring-beans.xml"};
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations) ;
+        AService aService = context.getBean(AService.class);
+        User user = new User();
+        user.setAge(111);
+        user.setName("bbbbbbbb");
+        aService.saveMutipleDao(user);
+
+        System.out.printf("66666");
+
+    }
+
+    @Test
+    public void testMutipleOperate() {
         String[] configurLocations = {"spring-beans.xml"};
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations);
         AService aService = context.getBean(AService.class);
-        User user = aService.queryById(2);
-        logger.debug("{}", user);
-        logger.debug("{}", user);
+        aService.mutipleOperate();
+        aService.queryById(2);
     }
 
-    /**
-     * 单简mapStatement 绑定数据源 查询测试
-     */
+
     @Test
-    public void testMapStatmentBindDatasourceWithTransaction() {
+    public void testMutipleOperate2() {
         String[] configurLocations = {"spring-beans.xml"};
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations);
         AService aService = context.getBean(AService.class);
-        User user = aService.queryByIdWithTransaction(2);
-        logger.debug("{}", user);
+        aService.mutipleOperate2();
     }
+
+
 }

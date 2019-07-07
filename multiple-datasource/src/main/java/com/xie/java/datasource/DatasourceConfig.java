@@ -27,6 +27,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -153,19 +154,17 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
         for (String beanName : beanDefinitionNames) {
             BeanDefinition beanDefinition = registry.getBeanDefinition(beanName);
             Class<?> beanClass = classLoader.loadClass(beanDefinition.getBeanClassName());
-            if (beanClass.isAnnotationPresent(DatabaseId.class)) {
-                DatabaseId annotation = beanClass.getAnnotation(DatabaseId.class);
-                parseMethodDatabaseId(annotation, beanClass, methodMappingMap);
+            if (beanClass.isAnnotationPresent(Service.class)) {
+                parseMethodDatabaseId(beanClass, methodMappingMap);
                 Class<?>[] interfaces = beanClass.getInterfaces();
                 for (Class<?> ifc : interfaces) {
-                    parseMethodDatabaseId(annotation, ifc, methodMappingMap);
+                    parseMethodDatabaseId(ifc, methodMappingMap);
                 }
             } else {
                 Class<?>[] interfaces = beanClass.getInterfaces();
                 for (Class<?> ifc : interfaces) {
-                    if (ifc.isAnnotationPresent(DatabaseId.class)) {
-                        DatabaseId annotation = ifc.getAnnotation(DatabaseId.class);
-                        parseMethodDatabaseId(annotation, ifc, methodMappingMap);
+                    if (ifc.isAnnotationPresent(Service.class)) {
+                        parseMethodDatabaseId(ifc, methodMappingMap);
                     }
 
                 }
@@ -192,8 +191,13 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
     }
 
 
-    private void parseMethodDatabaseId(DatabaseId annotation, Class<?> clz, Map<Method, MethodMapping> methodMappingMap) {
-        String databaseId = annotation.value();
+    private void parseMethodDatabaseId(Class<?> clz, Map<Method, MethodMapping> methodMappingMap) {
+        DatabaseId annotation = clz.getAnnotation(DatabaseId.class);
+        String databaseId = null;
+        if(annotation != null){
+             databaseId = annotation.value();
+        }
+
         Method[] methods = clz.getDeclaredMethods();
         for (Method m : methods) {
             MethodMapping methodMapping = new MethodMapping();
@@ -202,7 +206,9 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
             } else {
                 methodMapping.setDatabaseId(databaseId);
             }
-            checkDatabaseExist(methodMapping.getDatabaseId(), clz, m);
+            if(methodMapping.getDatabaseId() != null){
+                checkDatabaseExist(methodMapping.getDatabaseId(), clz, m);
+            }
             methodMapping.setMethod(m);
             methodMappingMap.put(m, methodMapping);
         }

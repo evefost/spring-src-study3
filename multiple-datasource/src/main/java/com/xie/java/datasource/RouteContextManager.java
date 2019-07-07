@@ -14,7 +14,7 @@ import java.util.Random;
 public class RouteContextManager {
 
     private static Map<Method, DatasourceConfig.MethodMapping> methodDatabaseMapping;
-
+    private static MultipleSourceProperties multipleSourceProperties;
 
     private static ContextHolder serviceContextHolder = new ContextHolder();
 
@@ -23,7 +23,9 @@ public class RouteContextManager {
 
     private static ThreadLocal<MappedStatement> currentMapStatement = ThreadLocal.withInitial(() -> null);
 
-    private static MultipleSourceProperties multipleSourceProperties;
+    private static ThreadLocal<Boolean> hadhUpdateOperateBefore = ThreadLocal.withInitial(() -> false);
+
+
 
     public static void setMultipleSourceProperties(MultipleSourceProperties multipleSourceProperties) {
         RouteContextManager.multipleSourceProperties = multipleSourceProperties;
@@ -120,6 +122,19 @@ public class RouteContextManager {
 
     public static String getDefaultDatabaseId() {
         return multipleSourceProperties.getDefaultDatabaseId();
+    }
+
+
+    public static  void markUpdateOperateFlag(){
+        hadhUpdateOperateBefore.set(true);
+    }
+
+    public static  void removeUpdateOperateFlag(){
+        hadhUpdateOperateBefore.set(false);
+    }
+
+    public static  boolean hadUpdateBefore(){
+       return hadhUpdateOperateBefore.get();
     }
 
 }

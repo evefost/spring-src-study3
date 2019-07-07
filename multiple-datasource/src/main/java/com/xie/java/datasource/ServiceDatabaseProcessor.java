@@ -1,6 +1,5 @@
 package com.xie.java.datasource;
 
-import com.xie.java.datasource.annotation.DatabaseId;
 import com.xie.java.datasource.interceptor.ServiceInterceptor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Proxy;
 
@@ -30,7 +30,7 @@ public class ServiceDatabaseProcessor implements BeanPostProcessor, BeanFactoryA
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (isMarkDatabaseId(beanName)) {
+        if (isMarkService(beanName)) {
             Class<?>[] interfaces = bean.getClass().getInterfaces();
             return Proxy.newProxyInstance(this.getClass().getClassLoader(), interfaces, new ServiceInterceptor(bean));
         }
@@ -38,17 +38,17 @@ public class ServiceDatabaseProcessor implements BeanPostProcessor, BeanFactoryA
     }
 
 
-    private boolean isMarkDatabaseId(String beanName) {
+    private boolean isMarkService(String beanName) {
 
         BeanDefinition beanDefinition = registry.getBeanDefinition(beanName);
         try {
             Class<?> clz = ServiceDatabaseProcessor.class.getClassLoader().loadClass(beanDefinition.getBeanClassName());
-            if (clz.isAnnotationPresent(DatabaseId.class)) {
+            if (clz.isAnnotationPresent(Service.class)) {
                 return true;
             }
             Class<?>[] interfaces = clz.getInterfaces();
             for (Class<?> ifc : interfaces) {
-                if (ifc.isAnnotationPresent(DatabaseId.class)) {
+                if (ifc.isAnnotationPresent(Service.class)) {
                     return true;
                 }
             }

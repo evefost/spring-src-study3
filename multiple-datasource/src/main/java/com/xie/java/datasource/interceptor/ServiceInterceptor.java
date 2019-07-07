@@ -35,9 +35,12 @@ public  class ServiceInterceptor implements InvocationHandler {
                 logger.debug("进入service ");
             }
             String databaseId = RouteContextManager.getDatabaseId(method);
-            logger.debug("service bind databaseId[{}]",databaseId);
+
             if(databaseId == null){
                 databaseId = RouteContextManager.getDefaultDatabaseId();
+                logger.debug("service use default databaseId [{}]",databaseId);
+            }else {
+                logger.debug("service bind databaseId [{}]",databaseId);
             }
             RouteContextManager.setCurrentDatabaseId(databaseId,transaction);
             try {
@@ -46,6 +49,7 @@ public  class ServiceInterceptor implements InvocationHandler {
                 int decrease = RouteContextManager.decrease(transaction);
                 RouteContextManager.setCurrentDatabaseId(null,transaction);
                 if (decrease == 0) {
+                    RouteContextManager.removeUpdateOperateFlag();
                     logger.debug("退出service");
                 }
             }
