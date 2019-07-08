@@ -51,7 +51,7 @@ public class TestServiceSimple {
         AService aService = context.getBean(AService.class);
         User user = new User();
         user.setAge(111);
-        user.setName("cccccc");
+        user.setName("4444444");
         aService.saveMutipleDao(user);
 
         System.out.printf("66666");

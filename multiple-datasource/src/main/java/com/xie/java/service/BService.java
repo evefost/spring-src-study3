@@ -14,6 +14,7 @@ public interface BService {
 
     //    @Transactional
     void save(User user);
+
     User queryById(Integer id);
 
     List<User> getUsers();

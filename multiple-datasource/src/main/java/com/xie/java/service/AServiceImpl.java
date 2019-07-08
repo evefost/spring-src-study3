@@ -17,81 +17,93 @@ import java.util.List;
 
 @Service
 public class AServiceImpl implements AService {
-  private final Logger logger = LoggerFactory.getLogger(getClass());
-  @Autowired
-  private AMapper aMapper;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    @Autowired
+    private AMapper aMapper;
 
-  @Autowired
-  private BMapper bMapper;
+    @Autowired
+    private BMapper bMapper;
 
-  @Autowired
-  private BService bService;
+    @Autowired
+    private BService bService;
 
-
-  /**
-   *
-   * @param user
-   */
-  @Override
-  public void save(User user) {
-    aMapper.insertUser(user);
-  }
-
-  @Override
-  @Transactional(rollbackFor = Exception.class)
-  public void saveWithTransaction(User user) {
-    aMapper.insertUser(user);
-  }
-
-  @Override
-  public User queryById(Integer id) {
-    aMapper.queryById(id);
-    return aMapper.queryById(id);
-  }
-
-  @Override
-  @Transactional(rollbackFor = Exception.class)
-  public User queryByIdWithTransaction(Integer id) {
-    return aMapper.queryById(id);
-  }
+    @Autowired
+    private CService cService;
 
 
-  @Override
-  public List<User> getUsers() {
-    return aMapper.listUser();
-  }
+    /**
+     * @param user
+     */
+    @Override
+    public void save(User user) {
+        aMapper.insertUser(user);
+    }
 
-  @Override
-  public void queryByIdMutipleDao(Integer id) {
-    aMapper.queryById(id);
-    bMapper.queryById(id);
-  }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveWithTransaction(User user) {
+        aMapper.insertUser(user);
+    }
 
-  @Override
-  public void saveMutipleDao(User user) {
-    aMapper.insertUser(user);
-    //bMapper.insertUser(user);
-    bService.save(user);
-  }
+    @Transactional
+    @Override
+    public User queryById(Integer id) {
+        aMapper.queryById(id);
+        User user = new User();
+        user.setAge(22);
+        user.setName("212112");
+        save(user);
+        bService.save(user);
+        cService.queryById(1);
+//        if(true){
+//            throw  new RuntimeException("xxxx");
+//        }
+        return user;
+    }
 
-  @Override
-  public void mutipleOperate() {
-    aMapper.queryById(1);
-    User user = new User();
-    user.setAge(22);
-    user.setName("mutipleOperate");
-    aMapper.insertUser(user);
-    aMapper.queryById(2);
-  }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public User queryByIdWithTransaction(Integer id) {
+        return aMapper.queryById(id);
+    }
 
-  @Override
-  public void mutipleOperate2() {
-    aMapper.queryById(1);
-    User user = new User();
-    user.setAge(22);
-    user.setName("00000000000");
-    bMapper.insertUser(user);
-    aMapper.queryById(2);
-    bMapper.queryById(2);
-  }
+
+    @Override
+    public List<User> getUsers() {
+        return aMapper.listUser();
+    }
+
+    @Override
+    public void queryByIdMutipleDao(Integer id) {
+        aMapper.queryById(id);
+        bMapper.queryById(id);
+    }
+
+    @Override
+    public void saveMutipleDao(User user) {
+        aMapper.insertUser(user);
+        //bMapper.insertUser(user);
+        bService.save(user);
+    }
+
+    @Override
+    public void mutipleOperate() {
+        aMapper.queryById(1);
+        User user = new User();
+        user.setAge(22);
+        user.setName("mutipleOperate");
+        aMapper.insertUser(user);
+        aMapper.queryById(2);
+    }
+
+    @Override
+    public void mutipleOperate2() {
+        aMapper.queryById(1);
+        User user = new User();
+        user.setAge(22);
+        user.setName("00000000000");
+        bMapper.insertUser(user);
+        aMapper.queryById(2);
+        bMapper.queryById(2);
+    }
 }

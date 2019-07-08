@@ -23,7 +23,7 @@ public class RouteContextManager {
 
     private static ThreadLocal<MappedStatement> currentMapStatement = ThreadLocal.withInitial(() -> null);
 
-    private static ThreadLocal<Boolean> hadhUpdateOperateBefore = ThreadLocal.withInitial(() -> false);
+    private static ThreadLocal<Boolean> hadUpdateOperateBefore = ThreadLocal.withInitial(() -> false);
 
 
 
@@ -131,15 +131,15 @@ public class RouteContextManager {
 
 
     public static  void markUpdateOperateFlag(){
-        hadhUpdateOperateBefore.set(true);
+        hadUpdateOperateBefore.set(true);
     }
 
     public static  void removeUpdateOperateFlag(){
-        hadhUpdateOperateBefore.set(false);
+        hadUpdateOperateBefore.set(false);
     }
 
     public static  boolean hadUpdateBefore(){
-       return hadhUpdateOperateBefore.get();
+       return hadUpdateOperateBefore.get();
     }
 
 }

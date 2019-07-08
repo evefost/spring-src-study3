@@ -12,7 +12,7 @@ import java.util.List;
 @DataSource("ds0_1")
 public interface AService {
 
-  @Transactional
+//  @Transactional
   User queryById(Integer id);
 
   User queryByIdWithTransaction(Integer id);
@@ -38,6 +38,6 @@ public interface AService {
   void mutipleOperate();
 
 
-  //  @Transactional
+    @Transactional
   void mutipleOperate2();
 }

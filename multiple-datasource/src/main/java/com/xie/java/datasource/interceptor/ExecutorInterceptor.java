@@ -1,6 +1,5 @@
 package com.xie.java.datasource.interceptor;
 
-import com.xie.java.datasource.DynamicRoutingStatementHandler;
 import com.xie.java.datasource.RouteContextManager;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
