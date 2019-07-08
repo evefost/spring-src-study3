@@ -1,6 +1,6 @@
 package com.xie.java.datasource;
 
-import com.xie.java.datasource.annotation.DatabaseId;
+import com.xie.java.datasource.annotation.DataSource;
 import com.xie.java.datasource.interceptor.ExecutorInterceptor;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
@@ -29,7 +29,6 @@ import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -57,7 +56,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
 
     private Resource[] mapperLocations;
 
-    private DataSource dataSource;
+    private javax.sql.DataSource dataSource;
 
     private TransactionFactory transactionFactory;
 
@@ -304,7 +303,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
      * passed in, it will be unwrapped to extract its target {@code DataSource}.
      */
     @Override
-    public void setDataSource(DataSource dataSource) {
+    public void setDataSource(javax.sql.DataSource dataSource) {
         if (dataSource instanceof TransactionAwareDataSourceProxy) {
             // If we got a TransactionAwareDataSourceProxy, we need to perform
             // transactions for its underlying target DataSource, else data
@@ -379,8 +378,8 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
         databaseField.setAccessible(true);
         for (Class clzz : mappers) {
             String clzDatabaseId = null;
-            if (clzz.isAnnotationPresent(DatabaseId.class)) {
-                clzDatabaseId = ((DatabaseId) clzz.getAnnotation(DatabaseId.class)).value();
+            if (clzz.isAnnotationPresent(DataSource.class)) {
+                clzDatabaseId = ((DataSource) clzz.getAnnotation(DataSource.class)).value();
             }
             Method[] methods = clzz.getMethods();
             for (Method m : methods) {
@@ -392,8 +391,8 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
                 if (clzDatabaseId != null) {
                     databaseField.set(stm, clzDatabaseId);
                 }
-                if (m.isAnnotationPresent(DatabaseId.class)) {
-                    String databaseId = m.getAnnotation(DatabaseId.class).value();
+                if (m.isAnnotationPresent(DataSource.class)) {
+                    String databaseId = m.getAnnotation(DataSource.class).value();
                     databaseField.set(stm, databaseId);
                 }
 
@@ -525,7 +524,7 @@ public class DynamicSessionFactoryBean extends SqlSessionFactoryBean {
         }
 
         if (this.transactionFactory == null) {
-            this.transactionFactory = new SpringManagedTransactionFactory();
+            this.transactionFactory = new DynamiceDatasourceTransactionFactory();
         }
 
         configuration.setEnvironment(new Environment(this.environment, this.transactionFactory, this.dataSource));

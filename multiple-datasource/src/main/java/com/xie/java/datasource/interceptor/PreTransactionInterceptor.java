@@ -1,9 +1,12 @@
 package com.xie.java.datasource.interceptor;
 
+import com.xie.java.datasource.DatasourceConfig;
 import com.xie.java.datasource.RouteContextManager;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.interceptor.TransactionAttribute;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
 /**
@@ -46,13 +49,13 @@ public class PreTransactionInterceptor extends TransactionInterceptor {
         }
     }
 
-//    @Override
-//    protected PlatformTransactionManager determineTransactionManager(TransactionAttribute txAttr) {
-//        String manangerName =TRANSACTION_MANAGER_PREFIX+RouteContextManager.currentDatabaseId();
-//        Object bean = getBeanFactory().getBean(manangerName);
-//        if(bean != null){
-//            return (PlatformTransactionManager) bean;
-//        }
-//        return  super.determineTransactionManager(txAttr);
-//    }
+    @Override
+    protected PlatformTransactionManager determineTransactionManager(TransactionAttribute txAttr) {
+        String manangerName = DatasourceConfig.TRANSACTION_MANAGER_PREFIX + RouteContextManager.currentDatabaseId();
+        Object bean = getBeanFactory().getBean(manangerName);
+        if (bean != null) {
+            return (PlatformTransactionManager) bean;
+        }
+        return super.determineTransactionManager(txAttr);
+    }
 }

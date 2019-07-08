@@ -2,7 +2,7 @@ package com.xie.java.service;
 
 import com.xie.java.dao.CMapper;
 import com.xie.java.datasource.RouteContextManager;
-import com.xie.java.datasource.annotation.DatabaseId;
+import com.xie.java.datasource.annotation.DataSource;
 import com.xie.java.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 @Service
-@DatabaseId("ds2")
+@DataSource("ds2")
 public class CServiceImpl implements CService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

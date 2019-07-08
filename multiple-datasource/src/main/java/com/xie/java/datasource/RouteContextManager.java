@@ -106,6 +106,11 @@ public class RouteContextManager {
         return dataSourceProperties.getParentId();
     }
 
+    public static DataSourceProperties getProperties(String databaseId) {
+        return multipleSourceProperties.getDatasourceProperties().get(databaseId);
+
+    }
+
     private static Random r = new Random();
 
     public static String getSlaverId(String masterId) {

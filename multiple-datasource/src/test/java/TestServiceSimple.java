@@ -17,7 +17,7 @@ public class TestServiceSimple {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations) ;
         AService aService = context.getBean(AService.class);
         User user = aService.queryById(2);
-
+        System.out.println("xxxxxx");
     }
 
     @Test
@@ -51,12 +51,13 @@ public class TestServiceSimple {
         AService aService = context.getBean(AService.class);
         User user = new User();
         user.setAge(111);
-        user.setName("bbbbbbbb");
+        user.setName("cccccc");
         aService.saveMutipleDao(user);
 
         System.out.printf("66666");
 
     }
+
 
     @Test
     public void testMutipleOperate() {
@@ -64,7 +65,6 @@ public class TestServiceSimple {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configurLocations);
         AService aService = context.getBean(AService.class);
         aService.mutipleOperate();
-        aService.queryById(2);
     }
 
 

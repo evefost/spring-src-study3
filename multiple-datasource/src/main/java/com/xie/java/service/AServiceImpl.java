@@ -45,6 +45,7 @@ public class AServiceImpl implements AService {
 
   @Override
   public User queryById(Integer id) {
+    aMapper.queryById(id);
     return aMapper.queryById(id);
   }
 
@@ -88,7 +89,7 @@ public class AServiceImpl implements AService {
     aMapper.queryById(1);
     User user = new User();
     user.setAge(22);
-    user.setName("mutipleOperate222");
+    user.setName("00000000000");
     bMapper.insertUser(user);
     aMapper.queryById(2);
     bMapper.queryById(2);

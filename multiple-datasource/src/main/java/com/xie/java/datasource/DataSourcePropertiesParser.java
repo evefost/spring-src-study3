@@ -53,7 +53,7 @@ public class DataSourcePropertiesParser {
                 }
             });
         });
-        masterSlaverProperties = masters;
+        masterSlaverProperties = new HashMap<>(masters);
         datasourceProperties = masters;
         slavers.forEach((k, v) -> {
             datasourceProperties.put(k, v);

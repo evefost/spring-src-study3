@@ -1,6 +1,6 @@
 package com.xie.java.dao;
 
-import com.xie.java.datasource.annotation.DatabaseId;
+import com.xie.java.datasource.annotation.DataSource;
 import com.xie.java.entity.User;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by xieyang on 18/3/3.
  */
-@DatabaseId("ds0_1")
+@DataSource("ds0_1")
 public interface AMapper {
 
     void insertUser(User user);

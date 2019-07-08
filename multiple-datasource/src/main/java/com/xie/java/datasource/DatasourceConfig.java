@@ -1,6 +1,6 @@
 package com.xie.java.datasource;
 
-import com.xie.java.datasource.annotation.DatabaseId;
+import com.xie.java.datasource.annotation.DataSource;
 import com.xie.java.datasource.interceptor.PreTransactionInterceptor;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.aop.framework.adapter.AdvisorAdapterRegistry;
@@ -29,11 +29,9 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -101,36 +99,31 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
     }
 
     private void initDatasource() {
-        Map<String, DataSource> dataSources = new HashMap<>(sourceProperties.getDatasourceProperties().size());
-        for (Map.Entry<String, DataSourceProperties> entry : sourceProperties.getMasterSlaverProperties().entrySet()) {
+        Map<String, javax.sql.DataSource> dataSources = new HashMap<>(sourceProperties.getDatasourceProperties().size());
+        Map<String, DataSourceProperties> datasourceProperties = sourceProperties.getDatasourceProperties();
+        for (Map.Entry<String, DataSourceProperties> entry : datasourceProperties.entrySet()) {
             String dataId = entry.getKey();
             DataSourceProperties value = entry.getValue();
-            DataSource dataSource = createDataSource(value);
-            if (value.getSlavers().isEmpty()) {
-                dataSources.put(dataId, dataSource);
-            } else {
-                DynamicCompositDataSource masterDataSource = new DynamicCompositDataSource();
-                masterDataSource.setMaster(dataSource);
-                List<DataSourceProperties> slavers = value.getSlavers();
-                for (DataSourceProperties slaverProperties : slavers) {
-                    DataSource slaverDataSource = createDataSource(slaverProperties);
-                    masterDataSource.addSlaver(slaverProperties.getId(), slaverDataSource);
-                    dataSources.put(slaverProperties.getId(), slaverDataSource);
-                }
-                dataSources.put(dataId, masterDataSource);
-            }
+            javax.sql.DataSource dataSource = createDataSource(value);
+            dataSources.put(dataId, dataSource);
         }
         this.dataSource.setSourceProperties(sourceProperties);
         this.dataSource.setDataSources(dataSources);
     }
 
-    private DataSource createDataSource(DataSourceProperties properties) {
+    private javax.sql.DataSource createDataSource(DataSourceProperties properties) {
+
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl(properties.getUrl());
         dataSource.setUsername(properties.getUsername());
         dataSource.setPassword(properties.getPassword());
-        return dataSource;
+        DynamicDataSource dynamicDataSource = new DynamicDataSource();
+        dynamicDataSource.setDelegate(dataSource);
+        dynamicDataSource.setDatabaseId(properties.getId());
+        dynamicDataSource.setUrl(properties.getUrl());
+        dynamicDataSource.setMaster(properties.getParentId() == null);
+        return dynamicDataSource;
 
     }
 
@@ -177,22 +170,24 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
 
     private void registryPlatformTransactionManager() {
 
-        Map<String, DataSourceProperties> masterSlaverProperties = sourceProperties.getMasterSlaverProperties();
+        Map<String, DataSourceProperties> datasourceProperties = sourceProperties.getDatasourceProperties();
 
-        masterSlaverProperties.forEach((databaseId, properties) -> {
-            GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
-            beanDefinition.setBeanClass(DataSourceTransactionManager.class);
-            MutablePropertyValues propertyValues = new MutablePropertyValues();
-            propertyValues.add("dataSource",dataSource.getDatasource(databaseId));
-            beanDefinition.setPropertyValues(propertyValues);
-            registry.registerBeanDefinition(TRANSACTION_MANAGER_PREFIX + databaseId, beanDefinition);
+        datasourceProperties.forEach((databaseId, properties) -> {
+            if (properties.getParentId() == null) {
+                GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+                beanDefinition.setBeanClass(DataSourceTransactionManager.class);
+                MutablePropertyValues propertyValues = new MutablePropertyValues();
+                propertyValues.add("dataSource", dataSource.getDatasource(databaseId));
+                beanDefinition.setPropertyValues(propertyValues);
+                registry.registerBeanDefinition(TRANSACTION_MANAGER_PREFIX + databaseId, beanDefinition);
+            }
         });
 
     }
 
 
     private void parseMethodDatabaseId(Class<?> clz, Map<Method, MethodMapping> methodMappingMap) {
-        DatabaseId annotation = clz.getAnnotation(DatabaseId.class);
+        DataSource annotation = clz.getAnnotation(DataSource.class);
         String databaseId = null;
         if(annotation != null){
              databaseId = annotation.value();
@@ -201,8 +196,8 @@ public class DatasourceConfig implements BeanFactoryAware, ResourceLoaderAware, 
         Method[] methods = clz.getDeclaredMethods();
         for (Method m : methods) {
             MethodMapping methodMapping = new MethodMapping();
-            if (m.isAnnotationPresent(DatabaseId.class)) {
-                methodMapping.setDatabaseId(m.getAnnotation(DatabaseId.class).value());
+            if (m.isAnnotationPresent(DataSource.class)) {
+                methodMapping.setDatabaseId(m.getAnnotation(DataSource.class).value());
             } else {
                 methodMapping.setDatabaseId(databaseId);
             }

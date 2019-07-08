@@ -86,16 +86,22 @@ public class ExecutorInterceptor implements Interceptor {
         }
         String slaverId = RouteContextManager.getSlaverId(masterId);
         boolean isSelect  =  SqlCommandType.SELECT.equals(ms.getSqlCommandType());
+        String tip = "";
         if(RouteContextManager.hasTransaction()){
             RouteContextManager.setCurrentDatabaseId(masterId,true);
+            tip = "有事务";
         }else {
             if(!RouteContextManager.hadUpdateBefore() && isSelect){
                 //查询操作且之前没有过更新操作
                 RouteContextManager.setCurrentDatabaseId(slaverId,false);
+                tip = "无事务";
             }else {
                 RouteContextManager.setCurrentDatabaseId(masterId,false);
                 if(isSelect){
                     logger.debug("无事务查询操作，之前有过修改小操作,切换到主库:[{}]",masterId);
+                    tip = "无事务,之前有过修改小操作";
+                } else {
+                    tip = "无事务更新";
                 }
             }
         }
@@ -103,7 +109,7 @@ public class ExecutorInterceptor implements Interceptor {
         if(!isSelect){
             RouteContextManager.markUpdateOperateFlag();
         }
-        logger.info("[{}]当前应选数据源[{}]({})",ms.getSqlCommandType(), RouteContextManager.currentDatabaseId(),master?"主库":"从库");
+        logger.info("[{}]应连接[{}][{}]({})", ms.getSqlCommandType(), master ? "主库" : "从库", RouteContextManager.currentDatabaseId(), tip);
     }
 
     @Override
