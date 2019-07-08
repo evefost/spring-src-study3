@@ -1,6 +1,5 @@
 package com.xie.java.datasource.interceptor;
 
-import com.xie.java.datasource.DataSourceProperties;
 import com.xie.java.datasource.DynamicRoutingStatementHandler;
 import com.xie.java.datasource.RouteContextManager;
 import org.apache.ibatis.cache.CacheKey;
@@ -15,8 +14,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
@@ -45,13 +42,7 @@ public class ExecutorInterceptor implements Interceptor {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private DataSource dataSource;
-
-    private Map<String, DataSourceProperties> datasourceProperties;
-
-    public ExecutorInterceptor(DataSource dataSource, Map<String, DataSourceProperties> properties) {
-        this.dataSource = dataSource;
-        this.datasourceProperties = properties;
+    public ExecutorInterceptor() {
     }
 
     Random r = new Random();

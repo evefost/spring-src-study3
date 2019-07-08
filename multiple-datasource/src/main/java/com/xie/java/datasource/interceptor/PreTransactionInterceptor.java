@@ -19,8 +19,8 @@ public class PreTransactionInterceptor extends TransactionInterceptor {
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        boolean transaction = true;
-        int increase = RouteContextManager.increase(transaction);
+
+        int increase = RouteContextManager.increase(true);
         if (increase == 1) {
             logger.debug("进入事务拦截器");
         }
@@ -30,19 +30,19 @@ public class PreTransactionInterceptor extends TransactionInterceptor {
         }
         boolean master = RouteContextManager.isMaster(databaseId);
         if(master){
-            RouteContextManager.setCurrentDatabaseId(databaseId,transaction);
+            RouteContextManager.setCurrentDatabaseId(databaseId, true);
         }else {
             //自动切到主库
             String masterId = RouteContextManager.getMasterId(databaseId);
-            RouteContextManager.setCurrentDatabaseId(masterId,transaction);
+            RouteContextManager.setCurrentDatabaseId(masterId, true);
             logger.debug("有事务从库[{}]切到主库[{}]",databaseId,masterId);
         }
 
         try {
             return super.invoke(invocation);
         } finally {
-            int decrease = RouteContextManager.decrease(transaction);
-            RouteContextManager.setCurrentDatabaseId(null,transaction);
+            int decrease = RouteContextManager.decrease(true);
+            RouteContextManager.setCurrentDatabaseId(null, true);
             if (decrease == 0) {
                 logger.debug("退出事务");
             }
