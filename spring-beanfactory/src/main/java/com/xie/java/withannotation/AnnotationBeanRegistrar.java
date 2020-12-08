@@ -3,7 +3,6 @@ package com.xie.java.withannotation;
 import com.xie.java.annotation.Tag;
 import com.xie.java.annotation.Topic;
 import com.xie.java.annotation.VirtualApi;
-import com.xie.java.simple.BeanRegistrar;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.*;

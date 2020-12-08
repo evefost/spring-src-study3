@@ -1,0 +1,18 @@
+@startuml
+main -> ApplicationContext: new()
+ApplicationContext -> ApplicationContext: getResourcePatternResolver()\n 获取资源配置处理器
+ApplicationContext -> ApplicationContext:setConfigLocations()设置配置位置信息
+ApplicationContext -> ApplicationContext:refresh:prepareRefresh()\n准备环境信息getEnvironment()
+ApplicationContext -> ApplicationContext:obtainFreshBeanFactory()创建BeanFactory并解释配置(beanDefinition)
+ApplicationContext -> ApplicationContext:prepareBeanFactory()BeanFactory准备信息\n(包括BeanPostProcessor这些信信息)
+ApplicationContext -> ApplicationContext:postProcessBeanFactory()空实现，用于扩展
+ApplicationContext -> ApplicationContext:invokeBeanFactoryPostProcessors()\n调用所有BeanFactoryPostProcessor\n可以用于扩展自定一些Bean的注入
+ApplicationContext -> ApplicationContext:registerBeanPostProcessors() 注册所有实现BeanPostProcessor接口的实例
+ApplicationContext -> ApplicationContext:initMessageSource()国际化消息初始化
+ApplicationContext -> ApplicationContext:initApplicationEventMulticaster 初始化spring事件广播
+ApplicationContext -> ApplicationContext:finishBeanFactoryInitialization() BeanFactory初始化完成
+ApplicationContext -> ConfigurableListableBeanFactory:preInstantiateSingletons() 初始化生成Bean 实例
+ApplicationContext <-ConfigurableListableBeanFactory
+ApplicationContext -> ApplicationContext:finishRefresh
+ApplicationContext -> main:
+@enduml

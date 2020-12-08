@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class AnnotationFactoryBean implements FactoryBean<Object>, InitializingBean, ApplicationContextAware {
+public class AnnotationFactoryBean implements FactoryBean<Object>, InitializingBean, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 

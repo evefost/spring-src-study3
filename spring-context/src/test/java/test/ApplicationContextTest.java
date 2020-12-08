@@ -2,19 +2,20 @@ package test;
 
 
 import com.xie.context.TestA;
+import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Created by Administrator on 2018/2/10.
  */
-//@Component
-public class Test1 {
+public class ApplicationContextTest {
 
 
-    public static void main(String[] args) {
+    @Test
+    public void testInject(){
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring-beans.xml");
         TestA testBean = context.getBean(TestA.class);
-        System.out.println(testBean);
+        assert testBean != null;
     }
 
 

@@ -1,8 +1,9 @@
-package com.xie.java.xsd.test;
+package test.com.xie;
 
 
 import com.xie.java.xsd.beans.Student;
 import com.xie.java.xsd.beans.Teacher;
+import org.junit.Test;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionReader;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -13,7 +14,9 @@ import org.springframework.core.io.Resource;
 
 public class SpringCustomTest {
 
-    public static void main(String[] args) {
+
+    @Test
+    public void parseCustomerTags() {
 
         Resource classPathResource = new ClassPathResource("test.xml");
         BeanFactory factory = new DefaultListableBeanFactory();

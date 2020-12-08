@@ -1,6 +1,6 @@
 package com.xie.java.annotation;
 
-import com.xie.java.simple.BeanRegistrar;
+import com.xie.java.withannotation.BeanRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

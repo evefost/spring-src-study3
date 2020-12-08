@@ -1,4 +1,4 @@
-package com.xie.java.simple;
+package com.xie.java.withannotation;
 
 import com.xie.java.annotation.VirtualApi;
 import org.apache.commons.logging.Log;
@@ -80,21 +80,6 @@ public class BeanRegistrar implements
 
     protected void registerVirtualApi(BeanDefinitionRegistry registry,String name,
                                      AnnotationMetadata annotationMetadata) {
-        String className = annotationMetadata.getClassName();
-        BeanDefinitionBuilder definition = BeanDefinitionBuilder
-                .genericBeanDefinition(MyTestFactoryBean.class);
-        definition.addPropertyValue("name", name);
-        definition.addPropertyValue("url", "urltest");
-        definition.addPropertyValue("path", "pathqqqqq");
-        definition.addPropertyValue("type", className);
-        definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
-        AbstractBeanDefinition beanDefinition = definition.getBeanDefinition();
-        beanDefinition.setPrimary(false);
-        String beanName = name;
-        System.out.println("beanName:"+beanName);
-        BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDefinition, beanName,
-                new String[]{});
-        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
     }
 
     protected ClassPathScanningCandidateComponentProvider getScanner() {
