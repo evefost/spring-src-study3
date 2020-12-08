@@ -20,5 +20,7 @@
     4.判断元素对应的命名空间是自定义还默认的:BeanDefinitionDocumentReader
     5.据标签命名空间，找到对应的命名空间解释器 NamespaceHandler
     6.根据标签名称获取对应  BeanDefinitionParser(如ComponentScanBeanDefinitionParser)
-    7.解释标签信息，并生成beandefinition 注入beanFactory
+    7.解释标签信息，并生成beandefinition 注入beanFactory   
+## 应用实践示例
+    接口化发送消息
       
