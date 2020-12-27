@@ -1,5 +1,6 @@
 package com.xie.java.beans.processor;
 
+import com.xie.java.beans.annotatio.Component;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
@@ -15,6 +16,7 @@ import java.lang.reflect.Proxy;
  * @version 1.0.0
  * @date 2019/6/13
  */
+@Component
 public class MyPostProcessor implements BeanPostProcessor {
 
     @Override

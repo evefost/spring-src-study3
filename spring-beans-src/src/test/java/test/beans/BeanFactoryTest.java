@@ -65,8 +65,8 @@ public class BeanFactoryTest {
         customer.setPropertyValues(propertyValues);
 
         registry.registerBeanDefinition("customer", customer);
-        Object co = factory.getBean("customer");
-        Object testBean = factory.getBean("testBean");
+//        Object co = factory.getBean("customer");
+        Object testBean = factory.getBean("&tesss");
         System.out.println("ssss");
 
     }
@@ -88,11 +88,13 @@ public class BeanFactoryTest {
         beanDefinition.setBeanClass(MyPostProcessor.class);
         registry.registerBeanDefinition("processor1", beanDefinition);
         ((DefaultListableBeanFactory) factory).addBeanPostProcessor((BeanPostProcessor) factory.getBean("processor1"));
-
+        factory.getBean("testBean");
         //添加目标实例
         GenericBeanDefinition targetDf = new GenericBeanDefinition();
         targetDf.setBeanClass(Target.class);
         registry.registerBeanDefinition("testTarget", targetDf);
+
+        ((DefaultListableBeanFactory) factory).getSingletonNames();
         ITarget bean = (ITarget) factory.getBean("testTarget");
         bean.doSomething();
         System.out.println("ssss");

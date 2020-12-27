@@ -1,0 +1,22 @@
+@startuml
+tomcat -> ContextLoaderListener: contextInitialized()
+ContextLoaderListener --> ContextLoaderListener: initWebApplicationContext()
+ContextLoaderListener --> ContextLoaderListener:createWebApplicationContext()
+ContextLoaderListener -->ContextLoaderListener:determineContextClass()XmlWebApplicationContext\n(ContextLoader.properties配置的，\n该配置被PropertiesLoaderUtils扫描出来)
+ContextLoaderListener->BeanUtils:instantiateClass(contextClass)
+ContextLoaderListener->ContextLoaderListener:configureAndRefreshWebApplicationContext()
+ContextLoaderListener->XmlWebApplicationContext:setConfigLocation()设配置信息位置
+XmlWebApplicationContext->XmlWebApplicationContext:refresh()
+XmlWebApplicationContext->XmlWebApplicationContext:prepareRefresh()创建StandardServletEnvironment并初始化对应的配置信息
+ContextLoaderListener->ApplicationContextFacade:setAttribute()把XmlWebContext设置到属性里\n待到初始化servlet时作为根context
+tomcat->StandardWrapper:
+StandardWrapper->StandardWrapper:initServlet()
+StandardWrapper->DispatcherServlet:init()
+DispatcherServlet->DispatcherServlet:initWebApplicationContext()
+DispatcherServlet->WebApplicationContextUtils:getWebApplicationContext()获取前面他建的XmlWebContext作为RootContext
+DispatcherServlet->DispatcherServlet:createWebApplicationContext()创建servlet自身的context
+DispatcherServlet->XmlWebApplicationContext:refresh()
+ContextListener->DispatcherServlet:onRefresh()收到context刷新完成事件
+DispatcherServlet->DispatcherServlet:initStrategies()初始化servlet各种处理策略\n到此容器基本算初始化完成了
+tomcat <-- DispatcherServlet:
+@enduml

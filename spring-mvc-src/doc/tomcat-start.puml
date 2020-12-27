@@ -1,0 +1,20 @@
+@startuml
+client -> Bootstrap: main()
+Bootstrap --> Bootstrap: init()
+Bootstrap --> Bootstrap:load()
+Bootstrap -->Catalina:load()
+Catalina->Catalina:configFile(server.xml)
+Catalina->StandardServer:setCatalinaHome()设置deploy目录(用户代码)
+Catalina->Catalina:initStreams()
+Catalina->StandardServer:init()
+StandardServer->StandardService:init()一个Server 可以有多个service
+StandardService->Connector:init()一个service可以配置个connector\n如web和admin connector\n同时每个connector会有自身协议处理器
+Bootstrap -> Catalina:start()
+StandardService->StandardEngine:start()
+StandardEngine->StandardHost:start()异步启动container,可配多个
+StandardEngine->StandardContext:startListeners
+StandardContext->StandardContext:loadOnStartUp()
+StandardWrapper->StandardWrapper:loadServlet()
+StandardWrapper->StandardWrapper:initServlet()初始化servlet
+StandardWrapper->Bootstrap:
+@enduml
