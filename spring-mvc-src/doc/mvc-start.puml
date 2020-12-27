@@ -1,6 +1,6 @@
 @startuml
 tomcat -> ContextLoaderListener: contextInitialized()
-ContextLoaderListener --> ContextLoaderListener: initWebApplicationContext()
+ContextLoaderListener --> ContextLoaderListener: initWebApplicationContext()创建rootContext
 ContextLoaderListener --> ContextLoaderListener:createWebApplicationContext()
 ContextLoaderListener -->ContextLoaderListener:determineContextClass()XmlWebApplicationContext\n(ContextLoader.properties配置的，\n该配置被PropertiesLoaderUtils扫描出来)
 ContextLoaderListener->BeanUtils:instantiateClass(contextClass)
@@ -12,11 +12,23 @@ ContextLoaderListener->ApplicationContextFacade:setAttribute()把XmlWebContext�
 tomcat->StandardWrapper:
 StandardWrapper->StandardWrapper:initServlet()
 StandardWrapper->DispatcherServlet:init()
-DispatcherServlet->DispatcherServlet:initWebApplicationContext()
+DispatcherServlet->DispatcherServlet:initWebApplicationContext() 创建servlet的context
 DispatcherServlet->WebApplicationContextUtils:getWebApplicationContext()获取前面他建的XmlWebContext作为RootContext
 DispatcherServlet->DispatcherServlet:createWebApplicationContext()创建servlet自身的context
+DispatcherServlet->XmlWebApplicationContext:setConfigLocation()设置mvc配置文件
 DispatcherServlet->XmlWebApplicationContext:refresh()
+XmlWebApplicationContext->MvcNamespaceHandler:init()spring mvc标签解释\n并初始化注入配类实列到beanFactory里
 ContextListener->DispatcherServlet:onRefresh()收到context刷新完成事件
 DispatcherServlet->DispatcherServlet:initStrategies()初始化servlet各种处理策略\n到此容器基本算初始化完成了
+DispatcherServlet->DispatcherServlet:initHandlerMappings()各种controller或资源mapping初始货
+RequestMappingHandlerMapping->RequestMappingHandlerMapping:initHandlerMethods()初始化处理方法
+RequestMappingHandlerMapping->RequestMappingHandlerMapping:isHandler()据实例是否存RequestMapping或Contrller注解判断是否为处理器
+RequestMappingHandlerMapping->RequestMappingHandlerMapping:detectHandlerMethods()探测所有处理方法
+RequestMappingHandlerMapping->RequestMappingHandlerMapping:createRequestMappingInfo()创建RequestMappingInfo
+RequestMappingHandlerMapping->RequestMappingHandlerMapping:registerHandlerMethod()注册处理方法\n(请求过来可以从该注册中找到对应的处理方法)
+RequestMappingHandlerMapping->MappingRegistry:register()
+MappingRegistry->MappingRegistry:createHandlerMethod
+MappingRegistry->MappingRegistry:
+DispatcherServlet->DispatcherServlet:initHandlerAdapters()各种处理的适配
 tomcat <-- DispatcherServlet:
 @enduml

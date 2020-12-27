@@ -3,6 +3,7 @@ package test;
 
 import com.xie.context.TestA;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -12,8 +13,8 @@ public class ApplicationContextTest {
 
 
     @Test
-    public void testInject(){
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring-beans.xml");
+    public void mase(){
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring-beans.xml");
         TestA testBean = context.getBean(TestA.class);
         assert testBean != null;
     }

@@ -1,0 +1,13 @@
+@startuml
+client -> Server: contextInitialized()
+Server --> SocketProcessor: doRun()处理请求
+SocketProcessor --> StandardEngineValve:
+StandardEngineValve -->ApplicationFilterChain:doFilter()调用filter链路
+ApplicationFilterChain->ApplicationFilterChain:internalDoFilter()
+ApplicationFilterChain->DispatcherServlet:service()
+DispatcherServlet->DispatcherServlet:doService()
+DispatcherServlet->DispatcherServlet:doDispatch()
+DispatcherServlet->DispatcherServlet:checkMultipart()检查是否为文件上传
+DispatcherServlet->DispatcherServlet:getHandler()据请求信息，获取对应的处理器\n如果没有匹配到则返回null(404)
+client <-- Server:
+@enduml
