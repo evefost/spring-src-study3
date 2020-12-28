@@ -6,12 +6,15 @@
     </dependency>
 ## 2.tomcat 基本配置
     web.xml
-    ContextLoaderListener RootContext
+    ContextLoaderListener RootApplicationContext
     DispatcherServlet
     
 ## 3.tomcat启动
     ContextLoaderListener:contextInitialized 初始RootContext
     DispatcherServlet:init()初始ServletContext
 ## 4 spring-mvc 初始化
-    ServletContext 据配置,解释spring-mvc标签，初始化,mvc相关实例
-    DispatcherServlet:处理请求   
+    ServletApplicationContext 加载配置，生成bean 实例
+    MvcNamespaceHandler 解释spring-mvc标签，初始化,mvc相关实例
+    DispatcherServlet:处理请求
+    入参处理器 HandlerMethodArgumentResolver
+    出参处理器 HandlerMethodReturnValueHandler   

@@ -18,7 +18,8 @@ DispatcherServlet->DispatcherServlet:createWebApplicationContext()创建servlet�
 DispatcherServlet->XmlWebApplicationContext:setConfigLocation()设置mvc配置文件
 DispatcherServlet->XmlWebApplicationContext:refresh()
 XmlWebApplicationContext->MvcNamespaceHandler:init()spring mvc标签解释\n并初始化注入配类实列到beanFactory里
-ContextListener->DispatcherServlet:onRefresh()收到context刷新完成事件
+MvcNamespaceHandler->AnnotationDrivenBeanDefinitionParser:parse()处理RequestMappingHandlerMapping\nRequestMappingHandlerAdapter\n 等实例，包括入参、出参处理器
+AnnotationDrivenBeanDefinitionParser->AnnotationDrivenBeanDefinitionParser:getMessageConverters()获取消息转换器
 DispatcherServlet->DispatcherServlet:initStrategies()初始化servlet各种处理策略\n到此容器基本算初始化完成了
 DispatcherServlet->DispatcherServlet:initHandlerMappings()各种controller或资源mapping初始货
 RequestMappingHandlerMapping->RequestMappingHandlerMapping:initHandlerMethods()初始化处理方法
