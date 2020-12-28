@@ -12,7 +12,7 @@ StandardService->Connector:init()一个service可以配置个connector\n如web�
 Bootstrap -> Catalina:start()
 StandardService->StandardEngine:start()
 StandardEngine->StandardHost:start()异步启动container,可配多个
-StandardEngine->StandardContext:startListeners
+StandardEngine->StandardContext:startListeners()调起web.xml里配置ContextLoaderListener\n创建rootApplicationContext
 StandardContext->StandardContext:loadOnStartUp()
 StandardWrapper->StandardWrapper:loadServlet()
 StandardWrapper->StandardWrapper:initServlet()初始化servlet
